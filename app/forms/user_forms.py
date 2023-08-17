@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, TelField, PasswordField, EmailField, SelectField, ValidationError, FloatField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange
+from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange, Optional
 
 from models.users import User
 
@@ -18,7 +18,7 @@ class RegisterForm(FlaskForm):
     ingresos_mensuales = FloatField("Ingresos Mensuales: ", validators={NumberRange(min=0.0, max=None)})
     curp = StringField("Curp: ", validators=[DataRequired(), Length(min=18, max=18)])
     tel_cel = TelField("Tel Cel: ", validators=[DataRequired(), Length(min=10, max=10)])
-    tel_casa = TelField("Tel Casa: ", validators=[Length(min=10, max=10)])
+    tel_casa = TelField("Tel Casa: ", validators=[Optional(), Length(min=10, max=10)])
     email = EmailField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired(),
                                                     Length(min=5, max=50), 

@@ -15,7 +15,7 @@
     <main class="form-signin w-100 m-auto">
     <form class="form-signin" action="" method="POST">
         {{ form.csrf_token }}
-        <img class="mb-4" src="{{ url_for('static', filename='img/logo.jpg') }}" alt="" width="100" height="60">
+        <img class="mb-4" src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo" width="100" height="60">
 
         {% with messages = get_flashed_messages() %}
             {% if messages %}<br />
@@ -41,7 +41,11 @@
         <button class="w-100 btn btn-lg btn-primary" type="submit">
             <label for="{{ form.submit.id_for_label }}"></label>Ingresar
         </button>
-        <p class="mt-5 mb-3 text-body-secondary">&copy; 2023</p>
+        <br><br>
+        <p class="lead">¿No tienes cuenta? 
+            <a class="link-opacity-50-hover link-underline link-underline-opacity-0" href="{{ url_for('user.register') }}">Registrate</a>
+        </p>
+        <p class="mb-3 text-body-secondary">&copy; 2023</p>
     </form>
     </main>
     <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>

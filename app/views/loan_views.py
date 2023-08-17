@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, session
 
 loan_views = Blueprint('loan',__name__)
 
-@loan_views.route('/préstamo_previo/', methods=['GET'])
+@loan_views.route('/préstamo/previo/', methods=['GET'])
 def pre_loan():
     # Obtenemos los datos de la sesión
     loan_data = session.get('loan_data')

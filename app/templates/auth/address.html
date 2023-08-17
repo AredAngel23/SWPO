@@ -10,7 +10,7 @@
 
 <div class="form-container">
 
-    <h1>Registro de Domicilio</h1>
+    <h1>Registra tu Domicilio</h1>
 
     {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -44,7 +44,7 @@
         </div>
         <div class="form-field">
             <label for="{{ form.asentamiento.id_for_label }}">Asentamiento:</label>  
-            {{ form.asentamiento(class="input-field", placeholder="Asentamiento", required=true) }} 
+            {{ form.asentamiento(class="input-field", placeholder="Nombre del Asentamiento", required=true) }} 
         </div>
         <div class="form-field">
             <label for="{{ form.calle.id_for_label }}">Calle:</label>  

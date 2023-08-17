@@ -14,6 +14,14 @@ def index():
 
 @home_views.route('/préstamo/', methods = ['GET', 'POST'])
 def loan():
+    if 'user' not in session:
+        # Si el usuario no ha iniciado sesión, redirecciona a la página de inicio de sesión
+        return redirect(url_for('user.login'))
+    
+    if 'address_registered' not in session:
+        # Si el usuario no ha registrado su domicilio, redirecciona a la página de registro de domicilio
+        return redirect(url_for('user.address')) 
+
     form = LoanForm()
 
     if form.validate_on_submit():
@@ -35,8 +43,8 @@ def loan():
         }
 
         return redirect(url_for('loan.pre_loan'))
-
-    return render_template('home/loan.html', form = form)
+    
+    return render_template('home/loan.html', form = form)    
 
 @home_views.route('/about/')
 def about():

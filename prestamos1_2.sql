@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-08-2023 a las 17:21:14
+-- Tiempo de generación: 17-08-2023 a las 13:31:07
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -67,7 +67,7 @@ CREATE TABLE `domicilio` (
   `id_estado` tinyint(4) UNSIGNED NOT NULL,
   `municipio` varchar(50) NOT NULL,
   `cp` mediumint(5) NOT NULL,
-  `tipo_asen` varchar(25) NOT NULL,
+  `tipo_asen` tinyint(4) NOT NULL,
   `asentamiento` varchar(60) NOT NULL,
   `calle` varchar(50) NOT NULL,
   `num_ext` smallint(5) UNSIGNED DEFAULT NULL,
@@ -80,10 +80,7 @@ CREATE TABLE `domicilio` (
 --
 
 INSERT INTO `domicilio` (`id_domicilio`, `id_estado`, `municipio`, `cp`, `tipo_asen`, `asentamiento`, `calle`, `num_ext`, `num_int`, `id_cliente`) VALUES
-(1, 29, 'Huamantla', 90506, 'Unidad Habitacional', 'Ignacio Zaragoza', 'Andador Los Reyes', 60, 10, 4),
-(2, 29, 'Apizaco', 90510, 'Fraccionamiento', 'La Colina', 'Río Coatzacoatcos ', 1313, 1, 7),
-(4, 29, 'Ixtenco', 90400, 'Pueblo', 'La Colina', '1313', 13, 12, 8),
-(5, 29, 'Apizaco', 90500, 'Fraccionamiento', 'La Colina', 'Andador Los Reyes', 12, 12, 9);
+(1, 1, 'Huamantla', 22222, 14, 'La Colina', 'Andador Los Reyes', NULL, NULL, 9);
 
 -- --------------------------------------------------------
 
@@ -156,6 +153,25 @@ INSERT INTO `genero` (`id_genero`, `genero`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `modalidades_pago`
+--
+
+CREATE TABLE `modalidades_pago` (
+  `id_modalidad` tinyint(4) NOT NULL,
+  `modalidad_pago` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `modalidades_pago`
+--
+
+INSERT INTO `modalidades_pago` (`id_modalidad`, `modalidad_pago`) VALUES
+(1, 'Quincenal'),
+(2, 'Mensual');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `nivel_educativo`
 --
 
@@ -215,8 +231,68 @@ CREATE TABLE `prestamos` (
 --
 
 INSERT INTO `prestamos` (`id_prestamo`, `id_cliente`, `monto`, `periodo`, `modalidad_pago`, `fecha_in`) VALUES
-(1, 9, 5000, 6, 1, '2023-08-10 13:28:59'),
-(2, 9, 5000, 6, 1, '2023-08-10 13:29:09');
+(1, 9, 1200, 4, 2, '2023-08-15 12:31:14'),
+(2, 9, 5000, 8, 1, '2023-08-15 23:54:44'),
+(3, 9, 4000, 12, 1, '2023-08-16 01:26:35'),
+(4, 9, 3550, 6, 1, '2023-08-16 02:06:03'),
+(5, 8, 4200, 2, 2, '2023-08-16 04:13:18'),
+(6, 8, 5000, 6, 1, '2023-08-16 04:17:21'),
+(7, 8, 1200, 4, 1, '2023-08-16 04:20:28'),
+(8, 8, 1800, 8, 1, '2023-08-16 04:28:16'),
+(9, 8, 6000, 2, 1, '2023-08-16 04:31:20'),
+(10, 8, 550, 4, 2, '2023-08-16 10:28:52'),
+(11, 8, 550, 4, 2, '2023-08-16 10:33:07');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tipos_asen`
+--
+
+CREATE TABLE `tipos_asen` (
+  `id_tipo_asen` tinyint(4) NOT NULL,
+  `tipoAsen` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tipos_asen`
+--
+
+INSERT INTO `tipos_asen` (`id_tipo_asen`, `tipoAsen`) VALUES
+(1, 'Ampliación'),
+(2, 'Barrio'),
+(3, 'Ciudad'),
+(4, 'Ciudad Industrial'),
+(5, 'Colonia'),
+(6, 'Condominio'),
+(7, 'Conjunto Habitacional'),
+(8, 'Corredor Industrial'),
+(9, 'Ejido'),
+(10, 'Exhacienda'),
+(11, 'Fracción'),
+(12, 'Fraccionamiento'),
+(13, 'Granja'),
+(14, 'Hacienda'),
+(15, 'Manzana'),
+(16, 'Paraje'),
+(17, 'Privada'),
+(18, 'Prolongación'),
+(19, 'Pueblo'),
+(20, 'Puerto'),
+(21, 'Ranchería'),
+(22, 'Rancho'),
+(23, 'Región'),
+(24, 'Residencial'),
+(25, 'Rinconada'),
+(26, 'Sección'),
+(27, 'Sector'),
+(28, 'Supermanzana'),
+(29, 'Unidad'),
+(30, 'Unidad Habitacional'),
+(31, 'Villa'),
+(32, 'Zona Federal'),
+(33, 'Zona Industrial'),
+(34, 'Zona Militar');
 
 --
 -- Índices para tablas volcadas
@@ -239,7 +315,8 @@ ALTER TABLE `domicilio`
   ADD KEY `cp` (`cp`),
   ADD KEY `municipios_idx` (`municipio`),
   ADD KEY `fk_domicilio_estados_idx` (`id_estado`),
-  ADD KEY `fk_domicilio_clientes` (`id_cliente`);
+  ADD KEY `fk_domicilio_clientes` (`id_cliente`),
+  ADD KEY `fk_domicilio_tipoAsentamiento` (`tipo_asen`);
 
 --
 -- Indices de la tabla `estados`
@@ -252,6 +329,12 @@ ALTER TABLE `estados`
 --
 ALTER TABLE `genero`
   ADD PRIMARY KEY (`id_genero`);
+
+--
+-- Indices de la tabla `modalidades_pago`
+--
+ALTER TABLE `modalidades_pago`
+  ADD PRIMARY KEY (`id_modalidad`);
 
 --
 -- Indices de la tabla `nivel_educativo`
@@ -270,7 +353,14 @@ ALTER TABLE `ocupacion`
 --
 ALTER TABLE `prestamos`
   ADD PRIMARY KEY (`id_prestamo`),
-  ADD KEY `fk_prestamo_cliente` (`id_cliente`);
+  ADD KEY `fk_prestamo_cliente` (`id_cliente`),
+  ADD KEY `fk_prestamo_modalidad` (`modalidad_pago`);
+
+--
+-- Indices de la tabla `tipos_asen`
+--
+ALTER TABLE `tipos_asen`
+  ADD PRIMARY KEY (`id_tipo_asen`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -286,13 +376,19 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT de la tabla `domicilio`
 --
 ALTER TABLE `domicilio`
-  MODIFY `id_domicilio` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_domicilio` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `genero`
 --
 ALTER TABLE `genero`
   MODIFY `id_genero` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `modalidades_pago`
+--
+ALTER TABLE `modalidades_pago`
+  MODIFY `id_modalidad` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `nivel_educativo`
@@ -310,7 +406,13 @@ ALTER TABLE `ocupacion`
 -- AUTO_INCREMENT de la tabla `prestamos`
 --
 ALTER TABLE `prestamos`
-  MODIFY `id_prestamo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_prestamo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT de la tabla `tipos_asen`
+--
+ALTER TABLE `tipos_asen`
+  MODIFY `id_tipo_asen` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- Restricciones para tablas volcadas
@@ -329,13 +431,15 @@ ALTER TABLE `clientes`
 --
 ALTER TABLE `domicilio`
   ADD CONSTRAINT `fk_domicilio_clientes` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_usuario`),
-  ADD CONSTRAINT `fk_domicilio_estados` FOREIGN KEY (`id_estado`) REFERENCES `estados` (`id_estado`);
+  ADD CONSTRAINT `fk_domicilio_estados` FOREIGN KEY (`id_estado`) REFERENCES `estados` (`id_estado`),
+  ADD CONSTRAINT `fk_domicilio_tipoAsentamiento` FOREIGN KEY (`tipo_asen`) REFERENCES `tipos_asen` (`id_tipo_asen`);
 
 --
 -- Filtros para la tabla `prestamos`
 --
 ALTER TABLE `prestamos`
-  ADD CONSTRAINT `fk_prestamo_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_usuario`);
+  ADD CONSTRAINT `fk_prestamo_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_usuario`),
+  ADD CONSTRAINT `fk_prestamo_modalidad` FOREIGN KEY (`modalidad_pago`) REFERENCES `modalidades_pago` (`id_modalidad`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

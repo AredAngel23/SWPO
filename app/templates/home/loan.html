@@ -20,6 +20,7 @@
                 <span style="color: red;">{{ error}}</span>
             {% endfor %}
         </div>
+        <br>
         <div>
             {{ form.periodo.label }} {{ form.periodo() }}
             {% for error in form.periodo.errors %}
@@ -32,6 +33,7 @@
                 <span style="color: red;">{{ error}}</span>
             {% endfor %}
         </div>
+        <br>
         <div>
             {{ form.submit(class="btn btn-primary") }}
         </div>

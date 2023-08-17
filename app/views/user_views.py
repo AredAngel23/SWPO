@@ -54,6 +54,14 @@ def login():
 
 @user_views.route('/users/address/', methods = ['GET', 'POST'])
 def address():
+    if 'user' not in session:     
+        # El usuario no ha iniciado sesión, redirecciona a la página de inicio de sesión
+        return redirect(url_for('user.login')) 
+    
+    if 'address_registered' in session:
+        # El usuario ya ha registrado su domicilio, redirecciona a la página de préstamo
+        return ('Domicilio Ya Registrado')
+    
     form = AddressForm()
 
     if form.validate_on_submit():
@@ -69,11 +77,14 @@ def address():
 
         user = Address(id_estado, municipio, cp, tipo_asen, asentamiento, calle, num_ext, num_int, id_cliente)
         user.save()
-        flash ('Domicilio Registrado')
+
+        session['address_registered'] = True  # Marcar el domicilio como registrado
+        return redirect(url_for('home.loan'))  # Redirigir de nuevo a la vista de préstamo
+        #flash ('Domicilio Registrado')
 
     return render_template('auth/address.html', form=form)
 
-@user_views.route('/logout')  
+@user_views.route('/logout/')  
 def logout():
     session.clear()
     return redirect(url_for('home.index')) 

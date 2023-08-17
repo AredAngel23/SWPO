@@ -35,3 +35,11 @@ class Address:
 
             return result
 
+    @staticmethod
+    def get_tipo_asentamineto():
+        with mydb.cursor() as cursor:
+            sql = f"SELECT * FROM tipos_asen"
+            cursor.execute(sql)
+            result = cursor.fetchall()
+
+            return result
