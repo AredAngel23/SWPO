@@ -38,3 +38,23 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Ingresar')
 
+################ Formulario de Perfil ################
+class ProfileForm(FlaskForm):
+    # password No se edita
+    # email, Verificar antes de actualizar
+    nombre = StringField("Nombre: ", validators=[DataRequired(), Length(min=4, max=25)])
+    ape_pat = StringField("Apellido Paterno: ", validators=[DataRequired(), Length(min=4, max=25)])      
+    ape_mat = StringField("Apellido Materno: ", validators=[DataRequired(), Length(min=4, max=25)])
+    genero = User.get_genero()
+    id_genero = SelectField("Genero: ", choices=genero, coerce=int, validate_choice=False, validators=[DataRequired()])
+    fecha_nacimiento = DateField("Fecha de Nacimiento: ", validators=[DataRequired()])
+    nivelEdu = User.get_nivelEdu()
+    id_nivelEdu = SelectField("Educación: ", choices=nivelEdu, coerce=int, validate_choice=False, validators=[DataRequired()])
+    ocupacion = User.get_ocupacion()
+    id_ocupacion = SelectField("Ocupacion: ", choices=ocupacion, coerce=int, validate_choice=False, validators=[DataRequired()])
+    ingresos_mensuales = FloatField("Ingresos Mensuales: ", validators={NumberRange(min=0.0, max=None)})
+    curp = StringField("Curp: ", validators=[DataRequired(), Length(min=18, max=18)])
+    tel_cel = TelField("Tel Cel: ", validators=[DataRequired(), Length(min=10, max=10)])
+    tel_casa = TelField("Tel Casa: ", validators=[Optional(), Length(min=10, max=10)])
+    submit = SubmitField('Actualizar')
+

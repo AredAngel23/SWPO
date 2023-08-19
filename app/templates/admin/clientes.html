@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!-- Option 1: Include in HTML -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <title>Lista de Usuarios</title>
+</head>
+<body>
+    <h1 class="fw-normal text-center">Clientes</h1> 
+            <br>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td><strong>Nombre</strong></td>
+                        <td><strong>Apellido Paterno</strong></td>
+                        <td><strong>Apellido Materno</strong></td>
+                        <td><strong>Generó</strong></td>
+                        <td><strong>Fecha de Nacimiento</strong></td>
+                        <td><strong>Nivel Educativo</strong></td>
+                        <td><strong>Ocupación</strong></td>
+                        <td><strong>Ingresos Mensuales</strong></td>
+                        <td><strong>CURP</strong></td>
+                        <td><strong>Teléfono Celular</strong></td>
+                        <td><strong>Teléfono de Casa</strong></td>
+                        <td><strong>Correo</strong></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.nombre }}</td>
+                        <td>{{ user.ape_pat }}</td>
+                        <td>{{ user.ape_mat }}</td>
+                        <td>{{ user.genero }}</td>
+                        <td>{{ user.fecha_nacimiento }}</td>
+                        <td>{{ user.nivelEdu }}</td>
+                        <td>{{ user.ocupacion }}</td>
+                        <td>${{ user.ingresos_mensuales }}</td>
+                        <td>{{ user.curp }}</td>
+                        <td>{{ user.tel_cel }}</td>
+                        <td>{{ user.tel_casa }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            <form action="{{ url_for('user.delete', id=user.id_usuario) }}" method="post">
+                            <button class="btn btn-danger" type="submit" onclick="return confirm('¿Seguró?')">
+                                Eliminar
+                            </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <a href="{{  url_for('user.admin') }}"><i class="bi bi-arrow-90deg-left"></i></a>
+
+</body>
+</html>

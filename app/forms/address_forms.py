@@ -10,7 +10,7 @@ class AddressForm(FlaskForm):
     municipio = StringField("Municipio: ", validators=[DataRequired(), Length(min=5, max=50)])  
     cp = IntegerField("Codigó Postal: ", validators=[DataRequired()])
     tipo_asentamiento = Address.get_tipo_asentamineto
-    tipo_asen = SelectField("Tipo de Asentamiento: ", choices=tipo_asentamiento, coerce=int, validate_choice=False, validators=[DataRequired()])  
+    tipo_asen = SelectField("Tipo de Asentamiento: ", choices=tipo_asentamiento, coerce=int, validate_choice=False,    validators=[DataRequired()])  
     asentamiento = StringField("Asentamiento: ", validators=[DataRequired(), Length(min=5, max=60)])  
     calle = StringField("Calle: ", validators=[DataRequired(), Length(min=4, max=50)])
     num_ext = IntegerField("Número Exterior: ", validators=[Optional(), NumberRange(min=0.0, max=None)])

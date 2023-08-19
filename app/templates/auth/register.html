@@ -61,15 +61,15 @@
             {{ form.tel_casa(class="input-field", placeholder="Teléfono Casa") }} 
         </div>
         <div class="form-field">
-            <label for="{{ form.email.id_for_label }}">Email:</label>  
+            <label for="{{ form.email.id_for_label }}">Correo:</label>  
             {{ form.email(class="input-field", placeholder="Email", required=true) }} 
         </div>
         <div class="form-field">
-            <label for="{{ form.password.id_for_label }}">Password:</label>  
+            <label for="{{ form.password.id_for_label }}">Contraseña:</label>  
             {{ form.password(class="input-field", placeholder="Password", required=true) }} 
         </div>
         <div>
-            <label for="{{ form.password_confirm.id_for_label }}">Password Confirm:</label>  
+            <label for="{{ form.password_confirm.id_for_label }}">Corfima tu Contraseña:</label>  
             {{ form.password_confirm(class="input-field", placeholder="Password Confirm", required=true) }} 
         </div>
         <br>
@@ -81,4 +81,3 @@
 </div>
 
 {% endblock %}
-    

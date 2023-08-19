@@ -19,6 +19,7 @@ class User:
                  tel_casa,
                  email,
                  password,
+                 rol='cliente',
                  id_usuario = None):
         self.id_usuario = id_usuario
         self.nombre = nombre
@@ -33,6 +34,7 @@ class User:
         self.tel_cel = tel_cel
         self.tel_casa = tel_casa
         self.email = email
+        self.rol = rol
         self.password = password
 
     def save(self):
@@ -44,6 +46,14 @@ class User:
                 cursor.execute(sql, val)
                 mydb.commit()
                 self.id_usuario = cursor.lastrowid
+                return self.id_usuario
+        else:
+            with mydb.cursor() as cursor:
+                sql = 'UPDATE clientes SET nombre = %s, ape_pat = %s, ape_mat = %s, id_genero = %s, fecha_nacimiento = %s, id_nivelEdu = %s, id_ocupacion = %s, ingresos_mensuales = %s, curp = %s, tel_cel = %s, tel_casa = %s '
+                sql += 'WHERE id_usuario = %s'
+                val = (self.nombre, self.ape_pat, self.ape_mat, self.id_genero, self.fecha_nacimiento, self.id_nivelEdu, self.id_ocupacion, self.ingresos_mensuales, self.curp, self.tel_cel, self.tel_casa, self.id_usuario)
+                cursor.execute(sql, val)
+                mydb.commit()
                 return self.id_usuario
             
     def delete(self):
@@ -75,6 +85,7 @@ class User:
                             tel_casa=user["tel_casa"],
                             email=user["email"],
                             password=user["password"],
+                            rol=user['rol'],
                             id_usuario=id_usuario)
                 return user
             
@@ -108,29 +119,11 @@ class User:
         
     @staticmethod
     def get_all():
-        users = []
         with mydb.cursor(dictionary=True) as cursor:
-            sql = f"SELECT * FROM clientes"
+            sql = f"SELECT * FROM vistaclientes"
             cursor.execute(sql)
             result = cursor.fetchall()
-            for user in result:
-                users.append(
-                    User(nombre=user["nombre"], 
-                            ape_pat=user["ape_pat"], 
-                            ape_mat=user["ape_mat"], 
-                            id_genero=user["id_genero"], 
-                            fecha_nacimiento=user["fecha_nacimiento"], 
-                            id_nivelEdu=user["id_nivelEdu"], 
-                            id_ocupacion=user["id_ocupacion"],
-                            ingresos_mensuales=user["ingresos_mensuales"],
-                            curp=user["curp"],
-                            tel_cel=user["tel_cel"],
-                            tel_casa=user["tel_casa"],
-                            email=user["email"],
-                            password=user["password"],
-                            id_usuario=user["id_usuario"])
-                )
-            return users
+            return result
         
     @staticmethod
     def get_genero():
@@ -158,6 +151,3 @@ class User:
             result = cursor.fetchall()
 
             return result
-
-        
-    

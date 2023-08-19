@@ -1,14 +1,14 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, session
+from flask import Blueprint, render_template, flash, redirect, url_for, session, abort
 
 from models.users import User
 from models.address import Address
 
-from forms.user_forms import RegisterForm, LoginForm
+from forms.user_forms import RegisterForm, LoginForm, ProfileForm
 from forms.address_forms import AddressForm
 
 user_views = Blueprint('user',__name__)
 
-@user_views.route('/users/registro/', methods = ['GET', 'POST'])
+@user_views.route('/usuarios/registro/', methods = ['GET', 'POST'])
 def register():
     form = RegisterForm()
 
@@ -36,7 +36,7 @@ def register():
     return render_template('auth/register.html', form = form)
 
 
-@user_views.route('/users/login/', methods = ['GET', 'POST'])
+@user_views.route('/usuarios/iniciar_sesión/', methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
         
@@ -47,12 +47,15 @@ def login():
         if not user:
             flash('Verifica tus Datos')
         else:
-            session['user'] = {'email': email, 'id': user.id_usuario}
-            return render_template('home/index.html', user=user, form=form)
+            session['user'] = {'email': email, 'id': user.id_usuario, 'rol':user.rol}
+            if user.rol == 'cliente':
+                return render_template('home/index.html', user=user, form=form)
+            else:
+                return redirect(url_for('user.admin'))
         
     return render_template('auth/login.html', form=form)
 
-@user_views.route('/users/address/', methods = ['GET', 'POST'])
+@user_views.route('/usuarios/domicilio/', methods = ['GET', 'POST'])
 def address():
     if 'user' not in session:     
         # El usuario no ha iniciado sesión, redirecciona a la página de inicio de sesión
@@ -84,7 +87,55 @@ def address():
 
     return render_template('auth/address.html', form=form)
 
-@user_views.route('/logout/')  
+@user_views.route('/cerrar_sesión/')  
 def logout():
     session.clear()
-    return redirect(url_for('home.index')) 
+    return redirect(url_for('home.index'))  
+
+@user_views.route('/users/profile/', methods=('GET', 'POST'))
+def profile():
+    form = ProfileForm()
+    user = User.__get__(id_usuario=session.get('user')['id'])
+    if not user:    
+        abort(404)
+    if form.validate_on_submit():
+        user.nombre = form.nombre.data
+        user.ape_pat = form.ape_pat.data
+        user.ape_mat = form.ape_mat.data
+        user.id_genero = form.id_genero.data
+        user.fecha_nacimiento = form.fecha_nacimiento.data
+        user.id_nivelEdu = form.id_nivelEdu.data
+        user.id_ocupacion = form.id_ocupacion.data
+        user.ingresos_mensuales = form.ingresos_mensuales.data
+        user.curp = form.curp.data
+        user.tel_cel = form.tel_cel.data
+        user.tel_casa = form.tel_casa.data
+        user.save()
+    form.nombre.data = user.nombre
+    form.ape_pat.data = user.ape_pat
+    form.ape_mat.data = user.ape_mat
+    form.id_genero.data = user.id_genero
+    form.fecha_nacimiento.data = user.fecha_nacimiento
+    form.id_nivelEdu.data = user.id_nivelEdu
+    form.id_ocupacion.data = user.id_ocupacion
+    form.ingresos_mensuales.data = user.ingresos_mensuales
+    form.curp.data = user.curp
+    form.tel_cel.data = user.tel_cel
+    form.tel_casa.data = user.tel_casa      
+    return render_template('auth/profile.html', form=form)
+
+@user_views.route('/users/')
+def mostrar_usuarios():
+    users = User.get_all()
+    return render_template('admin/clientes.html', users = users)
+
+@user_views.route('/usuarios/<int:id>/eliminar', methods=['POST'])  
+def delete(id):
+    user=User.__get__(id)
+    if user != None:
+        user.delete()
+    return redirect(url_for('user.mostrar_usuarios'))
+
+@user_views.route('/admin/')
+def admin():
+    return render_template('admin/main.html')
