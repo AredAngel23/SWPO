@@ -33,10 +33,20 @@
         <div class="form-floating">
             <input type="text" class="form-control" id="email" name="email" placeholder="Email">
             <label for="{{ form.email.id_for_label }}">Correo</label>
+            {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            {% endif %}
         </div>
         <div class="form-floating mt-2">
             <input type="password" class="form-control" name="password" placeholder="Password">
             <label for="{{ form.password.id_for_label }}">Contraseña</label>
+            {% if form.password.errors %}
+                {% for error in form.password.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            {% endif %}
         </div>
         <button class="w-100 btn btn-lg btn-primary" type="submit">
             <label for="{{ form.submit.id_for_label }}"></label>Ingresar

@@ -5,7 +5,10 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange
 from models.users import User
 
 class RegisterForm(FlaskForm):
-    nombre = StringField("Nombre: ", validators=[DataRequired(), Length(min=4, max=25)])
+    nombre = StringField("Nombre: ",
+                         validators=[DataRequired(),
+                                     Length(min=4, max=25)]
+                         )
     ape_pat = StringField("Apellido Paterno: ", validators=[DataRequired(), Length(min=4, max=25)])      
     ape_mat = StringField("Apellido Materno: ", validators=[DataRequired(), Length(min=4, max=25)])
     genero = User.get_genero()
@@ -34,8 +37,13 @@ class RegisterForm(FlaskForm):
             raise ValidationError('El correo ya existe')
 
 class LoginForm(FlaskForm):
-    email = EmailField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    email = EmailField('Email',
+                       validators=[DataRequired(message='Ingresa tu correo'),
+                                   Email()]
+                       )
+    password = PasswordField('Password',
+                             validators=[DataRequired(message='Ingresa tu contraseña')]
+                             )
     submit = SubmitField('Ingresar')
 
 ################ Formulario de Perfil ################

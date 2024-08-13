@@ -15,7 +15,7 @@ def pre_loan():
         fecha_in = loan_data['fecha_in']
 
         if modalidad_pago == 1:
-            pagos = periodo * 2
+            pagos = int(periodo) * 2
             modalidad = 'Quincenal'
         else:
             pagos = periodo

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-08-2023 a las 13:31:07
+-- Tiempo de generación: 13-08-2024 a las 20:01:33
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -41,20 +41,18 @@ CREATE TABLE `clientes` (
   `tel_cel` varchar(10) NOT NULL,
   `tel_casa` varchar(12) DEFAULT NULL,
   `email` varchar(254) NOT NULL,
-  `password` varchar(150) NOT NULL
+  `password` varchar(150) NOT NULL,
+  `rol` varchar(7) NOT NULL DEFAULT 'cliente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `clientes`
 --
 
-INSERT INTO `clientes` (`id_usuario`, `nombre`, `ape_pat`, `ape_mat`, `id_genero`, `fecha_nacimiento`, `id_nivelEdu`, `id_ocupacion`, `ingresos_mensuales`, `curp`, `tel_cel`, `tel_casa`, `email`, `password`) VALUES
-(4, 'Angel', 'Perez', 'Rodriguez', 1, '2001-01-01', 1, 1, 2000, 'PERA030717HTLRDN03', '2471014138', '2453511112', 'ared2@gmail.com', 'pbkdf2:sha256:600000$D2WUy1AbjsJjmjio$3b2fe1e277797bd56cf55d6ca1f5f24309654fd7ed92f311fc8ff6804d25cac1'),
-(5, 'omar', 'Rodriguez', 'Lopez', 1, '2012-12-12', 1, 1, 6000, 'PERA030717HTLRDNA4', '2471014136', '2453511112', 'omar@gmail.com', 'pbkdf2:sha256:600000$w1OzpYDOSC52HjW4$a1cf26383edeac15cc612fef7793a20f4e1b51e27058b66a54c5910f1aa38d6c'),
-(6, 'omar', 'Perez', 'Lopez', 1, '2012-12-12', 1, 1, 6000, 'PERA030717HTLRDNA7', '2471014138', '2453511111', 'omar1@gmail.com', 'pbkdf2:sha256:600000$g2YGf0mWVtFjvJP1$306bd4107dd13f85a2b4674e8adcfa65b3a0ed4ae584262b55d9ad6ac2a32afa'),
-(7, 'Alon', 'Perez', 'Rodriguez', 1, '2023-08-06', 4, 1, 200, 'PERA030717HTLRDNA4', '2471014131', '2453511112', 'ared88@gmail.com', 'pbkdf2:sha256:600000$l2lucyEzvogHlboL$90ce415830ea14b1438842e7dae998d0e1cbaceed7539416841d573276137c16'),
-(8, 'omar', 'Perez', 'Bonilla', 1, '2023-08-04', 1, 1, 2000, 'PERA000718HTLRDNA3', '2471014136', '2453511112', 'omarr@gmail.com', 'pbkdf2:sha256:600000$KsJfD2sWUuO8cius$aa155e8b24b8a2abf8f7b112d3cd7b178d0daf9422dbf3017e51f35c79eeff1a'),
-(9, 'Aldo', 'Hernández', 'Bonilla', 1, '2023-08-07', 1, 1, 2000, 'PERA000718HTLRDNA3', '2411342422', '2453511112', 'prueba@gmail.com', 'pbkdf2:sha256:600000$bL7Eqbme82jL5xFb$64331c0df24451aeb89fedb8572cd784de8bc21c5d1177661e4bf2bfaacaf488');
+INSERT INTO `clientes` (`id_usuario`, `nombre`, `ape_pat`, `ape_mat`, `id_genero`, `fecha_nacimiento`, `id_nivelEdu`, `id_ocupacion`, `ingresos_mensuales`, `curp`, `tel_cel`, `tel_casa`, `email`, `password`, `rol`) VALUES
+(1, 'Angel', 'Perez', 'Rodriguez', 1, '2003-07-17', 3, 1, 2000, 'PERA030717HTLRDNA4', '2471014138', '', 'ared230000@gmail.com', 'pbkdf2:sha256:600000$AyQuHTTQHSbzYSMd$e2fb291a4889891ba1344e8a99513c53e523f2d06af522614f63767cc06b68cc', 'admin'),
+(2, 'Adriana', 'Medina', 'Montiel', 2, '2004-05-02', 3, 2, 2000, 'MEMD030723MTLRDPR4', '2471014131', '', 'adri@gmail.com', 'pbkdf2:sha256:600000$471yPAnI0TjdFiU7$475e17fa87a1b105b7b4b615b3cee9945c9c87c9d7b9613d05de14fe78185c98', 'cliente'),
+(6, 'Aldo', 'Perez', 'Rodriguez', 1, '2002-03-18', 4, 1, 3000, 'PERA030717HTLRDN03', '2471014130', '', 'prueba@gmail.com', 'pbkdf2:sha256:600000$hT7QkiJGVB9CZDQv$854cdb58e9ce7e06c0a9be9dc40c640dd9c0db4b51cd3b9aef66dea3a5284349', 'cliente');
 
 -- --------------------------------------------------------
 
@@ -80,7 +78,10 @@ CREATE TABLE `domicilio` (
 --
 
 INSERT INTO `domicilio` (`id_domicilio`, `id_estado`, `municipio`, `cp`, `tipo_asen`, `asentamiento`, `calle`, `num_ext`, `num_int`, `id_cliente`) VALUES
-(1, 1, 'Huamantla', 22222, 14, 'La Colina', 'Andador Los Reyes', NULL, NULL, 9);
+(1, 29, 'Huamantla', 90506, 30, 'Ignacio Zaragoza', 'Andador Los Reyes', 60, NULL, 1),
+(2, 29, 'Tetla ', 90000, 29, 'La Colina', 'Las Flores', 12, NULL, 2),
+(3, 1, 'Huamantla', 2000, 1, 'La Colina', 'Río Coatzacoatcos ', 1, NULL, 2),
+(4, 1, 'Huamantla', 30000, 1, 'Ignacio Zaragoza', 'Las Flores', 60, NULL, 2);
 
 -- --------------------------------------------------------
 
@@ -231,17 +232,9 @@ CREATE TABLE `prestamos` (
 --
 
 INSERT INTO `prestamos` (`id_prestamo`, `id_cliente`, `monto`, `periodo`, `modalidad_pago`, `fecha_in`) VALUES
-(1, 9, 1200, 4, 2, '2023-08-15 12:31:14'),
-(2, 9, 5000, 8, 1, '2023-08-15 23:54:44'),
-(3, 9, 4000, 12, 1, '2023-08-16 01:26:35'),
-(4, 9, 3550, 6, 1, '2023-08-16 02:06:03'),
-(5, 8, 4200, 2, 2, '2023-08-16 04:13:18'),
-(6, 8, 5000, 6, 1, '2023-08-16 04:17:21'),
-(7, 8, 1200, 4, 1, '2023-08-16 04:20:28'),
-(8, 8, 1800, 8, 1, '2023-08-16 04:28:16'),
-(9, 8, 6000, 2, 1, '2023-08-16 04:31:20'),
-(10, 8, 550, 4, 2, '2023-08-16 10:28:52'),
-(11, 8, 550, 4, 2, '2023-08-16 10:33:07');
+(1, 2, 1000, 2, 1, '2023-09-05 04:54:32'),
+(2, 2, 1000, 2, 1, '2023-09-05 04:56:03'),
+(3, 2, 1000, 2, 2, '2023-09-05 04:56:24');
 
 -- --------------------------------------------------------
 
@@ -293,6 +286,37 @@ INSERT INTO `tipos_asen` (`id_tipo_asen`, `tipoAsen`) VALUES
 (32, 'Zona Federal'),
 (33, 'Zona Industrial'),
 (34, 'Zona Militar');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vistaclientes`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vistaclientes` (
+`id_usuario` int(10)
+,`nombre` varchar(25)
+,`ape_pat` varchar(25)
+,`ape_mat` varchar(25)
+,`genero` varchar(10)
+,`fecha_nacimiento` date
+,`nivelEdu` varchar(30)
+,`ocupacion` varchar(30)
+,`ingresos_mensuales` float
+,`curp` varchar(18)
+,`tel_cel` varchar(10)
+,`tel_casa` varchar(12)
+,`email` varchar(254)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vistaclientes`
+--
+DROP TABLE IF EXISTS `vistaclientes`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vistaclientes`  AS SELECT `clientes`.`id_usuario` AS `id_usuario`, `clientes`.`nombre` AS `nombre`, `clientes`.`ape_pat` AS `ape_pat`, `clientes`.`ape_mat` AS `ape_mat`, `genero`.`genero` AS `genero`, `clientes`.`fecha_nacimiento` AS `fecha_nacimiento`, `nivel_educativo`.`nivelEdu` AS `nivelEdu`, `ocupacion`.`ocupacion` AS `ocupacion`, `clientes`.`ingresos_mensuales` AS `ingresos_mensuales`, `clientes`.`curp` AS `curp`, `clientes`.`tel_cel` AS `tel_cel`, `clientes`.`tel_casa` AS `tel_casa`, `clientes`.`email` AS `email` FROM (((`clientes` join `genero` on(`clientes`.`id_genero` = `genero`.`id_genero`)) join `nivel_educativo` on(`clientes`.`id_nivelEdu` = `nivel_educativo`.`id_nivelEdu`)) join `ocupacion` on(`clientes`.`id_ocupacion` = `ocupacion`.`id_ocupacion`)) WHERE `clientes`.`rol` = 'cliente' ;
 
 --
 -- Índices para tablas volcadas
@@ -370,13 +394,13 @@ ALTER TABLE `tipos_asen`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id_usuario` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_usuario` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `domicilio`
 --
 ALTER TABLE `domicilio`
-  MODIFY `id_domicilio` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_domicilio` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `genero`
@@ -406,7 +430,7 @@ ALTER TABLE `ocupacion`
 -- AUTO_INCREMENT de la tabla `prestamos`
 --
 ALTER TABLE `prestamos`
-  MODIFY `id_prestamo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_prestamo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_asen`
