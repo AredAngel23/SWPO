@@ -3,66 +3,89 @@
 {% block title %}Perfil{% endblock %}
 
 {% block customCSS %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}"> 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
 {% endblock %}
 
 {% block content %}
 
-    <div class="form-container">
+<div class="form-container">
 
-        <h1>Datos Personales</h1>
-        
-        <form method="post", enctype="multipart/form-data" class="modern-form">
-            {{ form.csrf_token }}
-            <div class="form-field">
-                <label for="{{ form.nombre.id_for_label }}">Nombre:</label>
-                {{ form.nombre(class="input-field", placeholder="Nombre", required=true) }}
-            </div>
-            <div class="form-field">
-                <label for="{{ form.ape_pat.id_for_label }}">Apellido Paterno:</label>
-                {{ form.ape_pat(class="input-field", placeholder="Apellido Paterno", required=true) }}
-            </div>
-            <div class="form-field">
-                <label for="{{ form.ape_mat.id_for_label }}">Apellido Materno:</label>
-                {{ form.ape_mat(class="input-field", placeholder="Apellido Materno", required=true) }}
-            </div>
-            <div class="form-field">
-                <label for="{{ form.id_genero.id_for_label }}">Género:</label>   
-                {{ form.id_genero(class="input-field", placeholder="Género", required=true) }}
-            </div>
-            <div class="form-field">
-                <label for="{{ form.fecha_nacimiento.id_for_label }}">Fecha de Nacimiento:</label>  
-                {{ form.fecha_nacimiento(class="input-field", placeholder="Fecha de Nacimiento", required=true) }} 
-            </div>
-            <div class="form-field">
-                <label for="{{ form.id_nivelEdu.id_for_label }}">Nivel Educativo:</label>  
-                {{ form.id_nivelEdu(class="input-field", placeholder="Nivel Educativo", required=true) }} 
-            </div>
-            <div class="form-field">
-                <label for="{{ form.id_ocupacion.id_for_label }}">Ocupación:</label>  
-                {{ form.id_ocupacion(class="input-field", placeholder="Ocupación", required=true) }} 
-            </div>
-            <div class="form-field">
-                <label for="{{ form.ingresos_mensuales.id_for_label }}">Ingresos Mensuales:</label>  
-                {{ form.ingresos_mensuales(class="input-field", placeholder="Ingresos Mensuales") }} 
-            </div>
-            <div class="form-field">
-                <label for="{{ form.curp.id_for_label }}">Curp:</label>  
-                {{ form.curp(class="input-field", placeholder="Curp", required=true) }} 
-            </div>
-            <div class="form-field">
-                <label for="{{ form.tel_cel.id_for_label }}">Teléfono Celular:</label>  
-                {{ form.tel_cel(class="input-field", placeholder="Teléfono Celular", required=true) }} 
-            </div>
-            <div class="form-field">
-                <label for="{{ form.tel_casa.id_for_label }}">Teléfono Casa:</label>  
-                {{ form.tel_casa(class="input-field", placeholder="Teléfono Casa") }} 
-            </div>
-            <div class="form-field">
-                {{ form.submit(class="submit-button") }}
-            </div>
-        </form>
-        
-    </div>
+    <h1>Datos Personales</h1>
+
+    <form method="post" , enctype="multipart/form-data" class="modern-form">
+        {{ form.csrf_token }}
+        <div class="form-field">
+            <label for="{{ form.nombre.id_for_label }}">Nombre:</label>
+            {{ form.nombre(class="input-field", placeholder="Nombre", required=true) }}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.ape_pat.id_for_label }}">Apellido Paterno:</label>
+            {{ form.ape_pat(class="input-field", placeholder="Apellido Paterno", required=true) }}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.ape_mat.id_for_label }}">Apellido Materno:</label>
+            {{ form.ape_mat(class="input-field", placeholder="Apellido Materno", required=true) }}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.id_genero.id_for_label }}">Género:</label>
+            {{ form.id_genero(class="input-field", placeholder="Género", required=true) }}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.fecha_nacimiento.id_for_label }}">Fecha de Nacimiento:</label>
+            {{ form.fecha_nacimiento(class="input-field", placeholder="Fecha de Nacimiento", required=true) }}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.id_nivelEdu.id_for_label }}">Nivel Educativo:</label>
+            {{ form.id_nivelEdu(class="input-field", placeholder="Nivel Educativo", required=true) }}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.id_ocupacion.id_for_label }}">Ocupación:</label>
+            {{ form.id_ocupacion(class="input-field", placeholder="Ocupación", required=true) }}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.ingresos_mensuales.id_for_label }}">Ingresos Mensuales:</label>
+            {{ form.ingresos_mensuales(class="input-field", placeholder="Ingresos Mensuales") }}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.curp.id_for_label }}">Curp:</label>
+            {{ form.curp(class="input-field", placeholder="Curp", required=true) }}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.tel_cel.id_for_label }}">Teléfono Celular:</label>
+            {{ form.tel_cel(class="input-field", placeholder="Teléfono Celular", required=true) }}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.tel_casa.id_for_label }}">Teléfono Casa (opcional):</label>
+            {{ form.tel_casa(class="input-field", placeholder="Teléfono Casa", required=false )}}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.email.id_for_label }}">Correo:</label>
+            {{ form.email(class="input-field", placeholder="Email", readonly="readonly") }}
+        </div>
+        <div class="form-field">
+            {{ form.submit(class="submit-button") }}
+        </div>
+    </form>
+    <hr>
+    <h2>Cambiar contraseña</h2>
+    <hr>
+    <form method="POST" action="" , enctype="multipart/form-data" class="modern-form">
+        {{ password_form.hidden_tag() }}
+        <div class="form-field">
+            <label for="{{ password_form.old_password.id_for_label }}">Contraseña actual:</label>
+            {{ password_form.old_password(class="input-field") }}
+        </div>
+        <div class="form-field">
+            <label for="{{ password_form.new_password.id_for_label }}">Nueva contraseña:</label>
+            {{ password_form.new_password(class="input-field") }}
+        </div>
+        <div class="form-field">
+            <label for="{{ password_form.confirm_password.id_for_label }}">Confirmar nueva contraseña:</label>
+            {{ password_form.confirm_password(class="input-field") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Cambiar contraseña</button>
+    </form>
+
+</div>
 
 {% endblock %}

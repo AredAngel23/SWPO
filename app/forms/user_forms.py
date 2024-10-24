@@ -56,5 +56,11 @@ class ProfileForm(FlaskForm):
     curp = StringField("Curp: ", validators=[DataRequired(), Length(min=18, max=18)])
     tel_cel = TelField("Tel Cel: ", validators=[DataRequired(), Length(min=10, max=10)])
     tel_casa = TelField("Tel Casa: ", validators=[Optional(), Length(min=10, max=10)])
-    submit = SubmitField('Actualizar')
+    email = EmailField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Guardar Cambios')
 
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField('Contraseña actual', validators=[DataRequired()])
+    new_password = PasswordField('Nueva contraseña', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirmar nueva contraseña', validators=[DataRequired(), EqualTo('new_password', message='Las contraseñas deben coincidir')])
+    submit = SubmitField('Cambiar contraseña')

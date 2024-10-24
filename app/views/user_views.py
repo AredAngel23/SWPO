@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for, session,
 from models.users import User
 from models.address import Address
 
-from forms.user_forms import RegisterForm, LoginForm, ProfileForm
+from forms.user_forms import RegisterForm, LoginForm, ProfileForm, ChangePasswordForm
 from forms.address_forms import AddressForm
 
 user_views = Blueprint('user',__name__)
@@ -95,9 +95,11 @@ def logout():
 @user_views.route('/users/profile/', methods=('GET', 'POST'))
 def profile():
     form = ProfileForm()
+    password_form = ChangePasswordForm()  # Formulario para cambiar la contraseña
     user = User.__get__(id_usuario=session.get('user')['id'])
     if not user:    
         abort(404)
+    # Actualización del perfil
     if form.validate_on_submit():
         user.nombre = form.nombre.data
         user.ape_pat = form.ape_pat.data
@@ -110,7 +112,23 @@ def profile():
         user.curp = form.curp.data
         user.tel_cel = form.tel_cel.data
         user.tel_casa = form.tel_casa.data
+        user.email = form.email.data
         user.save()
+        flash('Perfil actualizado correctamente', 'success')
+    # Cambio de contraseña
+    if password_form.validate_on_submit():
+        old_password = password_form.old_password.data
+        new_password = password_form.new_password.data
+
+        # Llamar al método de cambio de contraseña
+        password_change_message = user.change_password(old_password, new_password)
+        
+        if "exitosamente" in password_change_message:
+            flash(password_change_message, 'success')
+            return redirect(url_for('user.profile'))
+        else:
+            flash(password_change_message, 'danger')
+    # Pre-llenar el formulario con los datos del usuario actual        
     form.nombre.data = user.nombre
     form.ape_pat.data = user.ape_pat
     form.ape_mat.data = user.ape_mat
@@ -121,8 +139,9 @@ def profile():
     form.ingresos_mensuales.data = user.ingresos_mensuales
     form.curp.data = user.curp
     form.tel_cel.data = user.tel_cel
-    form.tel_casa.data = user.tel_casa      
-    return render_template('auth/profile.html', form=form)
+    form.tel_casa.data = user.tel_casa   
+    form.email.data = user.email   
+    return render_template('auth/profile.html', form=form, password_form=password_form)
 
 @user_views.route('/users/')
 def mostrar_usuarios():

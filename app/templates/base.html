@@ -32,13 +32,26 @@
         <div class="col-md-3 text-end">
             {% if session.get('user') %}
             <button type="button" class="btn btn-outline-primary me-2" ><a href="{{ url_for('user.logout') }}" class="nav-link px-2">Cerrar Sesión</a></button>
-            <button type="button" class="btn btn-primary" ><a href="{{ url_for('user.profile') }}" class="nav-link px-2">Mi</a></button>
+            <button type="button" class="btn btn-primary" ><a href="{{ url_for('user.profile') }}" class="nav-link px-2">Mi Perfil</a></button>
             {% else %}
             <button type="button" class="btn btn-outline-primary me-2"><a href="{{ url_for('user.login') }}" class="nav-link px-2">Iniciar Sesión</a></button>
             <button type="button" class="btn btn-primary"><a href="{{ url_for('user.register') }}" class="nav-link px-2">Registrarse</a></button>
             {% endif %}
         </div>
         </header>
+
+        <!-- Mensajes flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
     </div>
 
     {% block content %}

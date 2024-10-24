@@ -40,7 +40,7 @@ class User:
     def save(self):
         if self.id_usuario is None:
             with mydb.cursor() as cursor:
-                self.password = generate_password_hash(self.password)
+                self.password = generate_password_hash(self.password, method='pbkdf2:sha256', salt_length=8)
                 sql = "INSERT INTO clientes (nombre, ape_pat, ape_mat, id_genero, fecha_nacimiento, id_nivelEdu, id_ocupacion, ingresos_mensuales, curp, tel_cel, tel_casa, email, password) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 val = (self.nombre, self.ape_pat, self.ape_mat, self.id_genero, self.fecha_nacimiento, self.id_nivelEdu, self.id_ocupacion, self.ingresos_mensuales, self.curp, self.tel_cel, self.tel_casa, self.email, self.password)
                 cursor.execute(sql, val)
@@ -151,3 +151,28 @@ class User:
             result = cursor.fetchall()
 
             return result
+    
+    def change_password(self, old_password, new_password):
+        with mydb.cursor() as cursor:
+            # Primero, recuperar la contraseña almacenada en la base de datos
+            sql = "SELECT password FROM clientes WHERE id_usuario = %s"
+            cursor.execute(sql, (self.id_usuario,))
+            result = cursor.fetchone()
+
+            if result is not None:
+                stored_password = result[0]
+
+                # Verificar si la contraseña actual proporcionada es correcta
+                if check_password_hash(stored_password, old_password):
+                    # Si es correcta, encriptar la nueva contraseña
+                    new_hashed_password = generate_password_hash(new_password, method='pbkdf2:sha256', salt_length=8)
+
+                    # Actualizar la contraseña en la base de datos
+                    update_sql = "UPDATE clientes SET password = %s WHERE id_usuario = %s"
+                    cursor.execute(update_sql, (new_hashed_password, self.id_usuario))
+                    mydb.commit()
+                    return "Contraseña actualizada exitosamente"
+                else:
+                    return "La contraseña actual es incorrecta"
+            else:
+                return "Usuario no encontrado"
