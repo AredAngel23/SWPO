@@ -16,9 +16,11 @@
 
         <div>
             {{ form.monto.label }} {{ form.monto() }}
-            {% for error in form.monto.errors %}
-                <span style="color: red;">{{ error}}</span>
-            {% endfor %}
+            {% if form.monto.errors %}
+                {% for error in form.monto.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            {% endif %}
         </div>
         <br>
         <div>
@@ -32,6 +34,15 @@
             {% for error in form.modalidad_pago.errors %}
                 <span style="color: red;">{{ error}}</span>
             {% endfor %}
+        </div>
+        <br>
+        <div>
+            {{ form.accept_tc.label }} {{ form.accept_tc() }}
+            {% if form.accept_tc.errors %}
+                {% for error in form.accept_tc.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            {% endif %}
         </div>
         <br>
         <div>

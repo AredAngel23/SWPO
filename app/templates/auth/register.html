@@ -19,6 +19,11 @@
         <div class="form-field">
             <label for="{{ form.nombre.id_for_label }}">Nombre:</label>
             {{ form.nombre(class="input-field", placeholder="Nombre", required=true) }}
+            {% if form.nombre.errors %}
+                {% for error in form.nombre.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            {% endif %}
         </div>
         <div class="form-field">
             <label for="{{ form.ape_pat.id_for_label }}">Apellido Paterno:</label>
