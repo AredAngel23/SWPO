@@ -13,71 +13,143 @@
     <h1>Registro</h1>
 
     <form action="" method="post" class="modern-form">
-      
         {{ form.csrf_token }}
-
+    
         <div class="form-field">
             <label for="{{ form.nombre.id_for_label }}">Nombre:</label>
-            {{ form.nombre(class="input-field", placeholder="Nombre", required=true) }}
+            {{ form.nombre(class="input-field", placeholder="Nombre", required=True) }}
             {% if form.nombre.errors %}
-                {% for error in form.nombre.errors %}
-                <p>{{ error }}</p>
-                {% endfor %}
+                    {% for error in form.nombre.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
             {% endif %}
         </div>
+    
         <div class="form-field">
             <label for="{{ form.ape_pat.id_for_label }}">Apellido Paterno:</label>
-            {{ form.ape_pat(class="input-field", placeholder="Apellido Paterno", required=true) }}
+            {{ form.ape_pat(class="input-field", placeholder="Apellido Paterno", required=True) }}
+            {% if form.ape_pat.errors %}
+                    {% for error in form.ape_pat.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
         </div>
+    
         <div class="form-field">
             <label for="{{ form.ape_mat.id_for_label }}">Apellido Materno:</label>
-            {{ form.ape_mat(class="input-field", placeholder="Apellido Materno", required=true) }}
+            {{ form.ape_mat(class="input-field", placeholder="Apellido Materno", required=True) }}
+            {% if form.ape_mat.errors %}
+                    {% for error in form.ape_mat.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
         </div>
+    
         <div class="form-field">
             <label for="{{ form.id_genero.id_for_label }}">Género:</label>   
-            {{ form.id_genero(class="input-field", placeholder="Género", required=true) }}
+            {{ form.id_genero(class="input-field", placeholder="Género", required=True) }}
+            {% if form.id_genero.errors %}
+                    {% for error in form.id_genero.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
         </div>
+    
         <div class="form-field">
             <label for="{{ form.fecha_nacimiento.id_for_label }}">Fecha de Nacimiento:</label>  
-            {{ form.fecha_nacimiento(class="input-field", placeholder="Fecha de Nacimiento", required=true) }} 
+            {{ form.fecha_nacimiento(class="input-field", placeholder="Fecha de Nacimiento", required=True) }} 
+            {% if form.fecha_nacimiento.errors %}
+                    {% for error in form.fecha_nacimiento.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
         </div>
+    
         <div class="form-field">
             <label for="{{ form.id_nivelEdu.id_for_label }}">Nivel Educativo:</label>  
-            {{ form.id_nivelEdu(class="input-field", placeholder="Nivel Educativo", required=true) }} 
+            {{ form.id_nivelEdu(class="input-field", placeholder="Nivel Educativo", required=True) }} 
+            {% if form.id_nivelEdu.errors %}
+                    {% for error in form.id_nivelEdu.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
         </div>
+    
         <div class="form-field">
             <label for="{{ form.id_ocupacion.id_for_label }}">Ocupación:</label>  
-            {{ form.id_ocupacion(class="input-field", placeholder="Ocupación", required=true) }} 
+            {{ form.id_ocupacion(class="input-field", placeholder="Ocupación", required=True) }} 
+            {% if form.id_ocupacion.errors %}
+                    {% for error in form.id_ocupacion.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
         </div>
+    
         <div class="form-field">
             <label for="{{ form.ingresos_mensuales.id_for_label }}">Ingresos Mensuales:</label>  
-            {{ form.ingresos_mensuales(class="input-field", placeholder="Ingresos Mensuales") }} 
+            {{ form.ingresos_mensuales(class="input-field", placeholder="Ingresos Mensuales", min="0") }} 
+            {% if form.ingresos_mensuales.errors %}
+                    {% for error in form.ingresos_mensuales.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
         </div>
+    
         <div class="form-field">
             <label for="{{ form.curp.id_for_label }}">Curp:</label>  
-            {{ form.curp(class="input-field", placeholder="Curp", required=true) }} 
+            {{ form.curp(class="input-field", placeholder="Curp", required=True) }} 
+            {% if form.curp.errors %}
+                    {% for error in form.curp.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
         </div>
+    
         <div class="form-field">
             <label for="{{ form.tel_cel.id_for_label }}">Teléfono Celular:</label>  
-            {{ form.tel_cel(class="input-field", placeholder="Teléfono Celular", required=true) }} 
+            {{ form.tel_cel(class="input-field", placeholder="Teléfono Celular", required=True) }} 
+            {% if form.tel_cel.errors %}
+                    {% for error in form.tel_cel.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
         </div>
+    
         <div class="form-field">
             <label for="{{ form.tel_casa.id_for_label }}">Teléfono Casa (opcional):</label>  
             {{ form.tel_casa(class="input-field", placeholder="Teléfono Casa") }} 
         </div>
+    
         <div class="form-field">
             <label for="{{ form.email.id_for_label }}">Correo:</label>  
-            {{ form.email(class="input-field", placeholder="Email", required=true) }} 
+            {{ form.email(class="input-field", placeholder="Email", required=True) }} 
+            {% if form.email.errors %}
+                    {% for error in form.email.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
         </div>
+    
         <div class="form-field">
             <label for="{{ form.password.id_for_label }}">Contraseña:</label>  
-            {{ form.password(class="input-field", placeholder="Password", required=true) }} 
+            {{ form.password(class="input-field", placeholder="Password", required=True) }} 
+            {% if form.password.errors %}
+                    {% for error in form.password.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
         </div>
-        <div>
-            <label for="{{ form.password_confirm.id_for_label }}">Corfima tu Contraseña:</label>  
-            {{ form.password_confirm(class="input-field", placeholder="Password Confirm", required=true) }} 
+    
+        <div class="form-field">
+            <label for="{{ form.password_confirm.id_for_label }}">Confirmar Contraseña:</label>  
+            {{ form.password_confirm(class="input-field", placeholder="Password Confirm", required=True) }} 
+            {% if form.password_confirm.errors %}
+                    {% for error in form.password_confirm.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
         </div>
-        <br>
+    
         <div class="form-field">
             {{ form.submit(class="submit-button") }}
         </div>

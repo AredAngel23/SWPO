@@ -20,6 +20,7 @@ class User:
                  email,
                  password,
                  rol='cliente',
+                 is_approved=False,  # Nuevo campo para aprobación del administrador
                  id_usuario = None):
         self.id_usuario = id_usuario
         self.nombre = nombre
@@ -36,6 +37,7 @@ class User:
         self.email = email
         self.rol = rol
         self.password = password
+        self.is_approved = is_approved  # Asignación del nuevo campo
 
     def save(self):
         if self.id_usuario is None:
@@ -86,7 +88,8 @@ class User:
                             email=user["email"],
                             password=user["password"],
                             rol=user['rol'],
-                            id_usuario=id_usuario)
+                            id_usuario=id_usuario,
+                            is_approved=user["is_approved"])  # Incluye todos los campos necesarios
                 return user
             
             return None
