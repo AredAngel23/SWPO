@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+    
+{% block title %}Préstamo{% endblock %}
+
+{% block content %}  
+
+    <div class="position-relative overflow-hidden p-3 p-md-5 text-center bg-body-tertiary">
+        <h1 class="fw-normal">Cálculo Estimado</h1>
+        <p class="lead">Monto del Préstamo MXN</p>
+        <h2>${{ monto }}</h2>
+        <div>
+            <p class="lead">Plazo del Préstamo: <strong>{{ periodo }} Meses</strong></p>
+            <p class="lead">Plan de Pago: <strong>{{ modalidad }}</strong></p>
+            <p class="lead">Número de Pagos: <strong>{{ pagos }}</strong></p>
+            <p class="lead">Tasa de interés Mensual: <strong>8%-15%</strong></p>
+            <p class="lead">Monto Total a Pagar<h2>MXN${{ monto_total }}</h2></p>
+        </div>
+        <br>
+        <a class="btn btn-primary" href="{{ url_for('loan.estado')}}" role="button">Solicitar préstamo</a>
+
+    </div>
+
+
+{% endblock %}  

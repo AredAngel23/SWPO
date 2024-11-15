@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
     
-{% block title %}Registro de Domicilio{% endblock %}
+{% block title %}Datos de Domicilio{% endblock %}
 
 {% block customCSS %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}"> 
@@ -10,7 +10,7 @@
 
 <div class="form-container">
 
-    <h1>Registra tu Domicilio</h1>
+    <h1>Datos de Domicilio</h1>
 
     <form action="" method="post" class="modern-form">
       
@@ -78,7 +78,7 @@
 
         <div class="form-field">
             <label for="{{ form.num_ext.id_for_label }}">Número Exterior: (opcional)</label>
-            {{ form.num_ext(class="input-field", placeholder="Número Exterior") }}
+            {{ form.num_ext(class="input-field", placeholder="Número exterior", required=False )}}
             {% if form.num_ext.errors %}
                 {% for error in form.num_ext.errors %}
                     <p>{{ error }}</p>
@@ -88,7 +88,7 @@
 
         <div class="form-field">
             <label for="{{ form.num_int.id_for_label }}">Número Interior: (opcional)</label>
-            {{ form.num_int(class="input-field", placeholder="Número Interior") }}
+            {{ form.num_int(class="input-field", placeholder="Número Interior", required=False)}}
             {% if form.num_int.errors %}
                 {% for error in form.num_int.errors %}
                     <p>{{ error }}</p>

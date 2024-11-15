@@ -1,30 +1,34 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, abort, session
+from flask import Blueprint, render_template, flash, redirect, request, url_for, abort, session
 
 from models.users import User
 from models.address import Address
 
 from forms.user_forms import RegisterForm, LoginForm, ProfileForm, ChangePasswordForm
-from forms.address_forms import AddressForm
+from forms.address_forms import AddressForm, ProfileAddressForm
 
 user_views = Blueprint('user',__name__)
 
-@user_views.route('/usuarios/iniciar_sesión/', methods = ['GET', 'POST'])
+@user_views.route('/usuarios/iniciar_sesión/', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    next_url = request.args.get('next')  # Obtén la URL "next" si existe
         
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
         user = User.get_by_password(email, password)
+        
         if not user:
-            flash('Verifica tus Datos', 'danger')
+            flash('Verifica tus datos', 'danger')
         else:
-            session['user'] = {'email': email, 'id': user.id_usuario, 'rol':user.rol}
+            session['user'] = {'email': email, 'id': user.id_usuario, 'rol': user.rol}
+
+            # Redirigir a "next_url" si está definida, o a una vista por defecto
             if user.rol == 'cliente':
-                return render_template('home/index.html', user=user, form=form)
+                return redirect(next_url or url_for('home.index'))
             else:
                 return redirect(url_for('admin.admin'))
-        
+    
     return render_template('auth/login.html', form=form)
 
 @user_views.route('/usuarios/registro/', methods = ['GET', 'POST'])
@@ -62,11 +66,19 @@ def register():
 
 @user_views.route('/usuarios/perfil/', methods=('GET', 'POST'))
 def profile():
-    form = ProfileForm()
-    password_form = ChangePasswordForm()  # Formulario para cambiar la contraseña
-    user = User.__get__(id_usuario=session.get('user')['id'])
+    if 'user' not in session:
+        return redirect(url_for('user.login', next=request.url))
+    
+    user = User.__get__(session.get('user')['id'])
     if not user:    
-        abort(404)
+        flash('Usuario no encontrado', 'danger')
+        return redirect(url_for('user.login'))
+
+    # Verifica si el domicilio está registrado
+    has_address = user.has_address()
+
+    form = ProfileForm()
+    password_form = ChangePasswordForm()  
 
     # Actualización del perfil
     if form.validate_on_submit():
@@ -83,6 +95,7 @@ def profile():
         user.tel_casa = form.tel_casa.data
         user.email = form.email.data
         user.save()
+
         flash('Perfil actualizado correctamente', 'success')
 
     if form.errors:
@@ -95,8 +108,6 @@ def profile():
     if password_form.validate_on_submit():
         old_password = password_form.old_password.data
         new_password = password_form.new_password.data
-
-        # Llamar al método de cambio de contraseña
         password_change_message = user.change_password(old_password, new_password)
         
         if "exitosamente" in password_change_message:
@@ -119,39 +130,102 @@ def profile():
     form.tel_casa.data = user.tel_casa   
     form.email.data = user.email   
 
-    return render_template('auth/profile.html', form=form, password_form=password_form)
+    return render_template('auth/profile.html', form=form, password_form=password_form, has_address=has_address)
 
-@user_views.route('/usuarios/domicilio/', methods = ['GET', 'POST'])
+@user_views.route('/usuarios/domicilio/', methods=['GET', 'POST'])
 def address():
-    if 'user' not in session:     
-        # El usuario no ha iniciado sesión, redirecciona a la página de inicio de sesión
-        return redirect(url_for('user.login')) 
-    
-    if 'address_registered' in session:
-        # El usuario ya ha registrado su domicilio, redirecciona a la página de préstamo
-        return ('Domicilio Ya Registrado')
+    if 'user' not in session:
+        return redirect(url_for('user.login', next=request.url))
+
+    user = User.__get__(session['user']['id'])
+
+    # Verificar si el domicilio ya ha sido registrado
+    if user.has_address():
+        flash('Ya has registrado tu domicilio. Si necesitas actualizarlo, por favor, ve a tu perfil.', 'info')
+        return redirect(url_for('loan.solicitar'))
     
     form = AddressForm()
 
     if form.validate_on_submit():
-        id_estado = form.id_estado.data
-        municipio = form.municipio.data
-        cp = form.cp.data
-        tipo_asen = form.tipo_asen.data
-        asentamiento = form.asentamiento.data
-        calle = form.calle.data
-        num_ext = form.num_ext.data
-        num_int = form.num_int.data
-        id_cliente = session.get('user')['id']
+        # Crear y guardar el registro de domicilio
+        address = Address(
+            id_estado=form.id_estado.data,
+            municipio=form.municipio.data,
+            cp=form.cp.data,
+            tipo_asen=form.tipo_asen.data,
+            asentamiento=form.asentamiento.data,
+            calle=form.calle.data,
+            num_ext=form.num_ext.data,
+            num_int=form.num_int.data,
+            id_cliente=user.id_usuario
+        )
+        address.save()
+        flash('Registro de domicilio exitoso', 'success')
 
-        user = Address(id_estado, municipio, cp, tipo_asen, asentamiento, calle, num_ext, num_int, id_cliente)
-        user.save()
+        return redirect(url_for('loan.solicitar'))
 
-        session['address_registered'] = True  # Marcar el domicilio como registrado
-        return redirect(url_for('home.loan'))  # Redirigir de nuevo a la vista de préstamo
-        #flash ('Domicilio Registrado')
+    # Si hay errores en el formulario, mostrar mensajes sin redirigir
+    if form.errors:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f"Verifica tus datos, {error}", 'danger')
 
-    return render_template('auth/address.html', form=form)  
+    return render_template('auth/address.html', form=form)
+
+@user_views.route('/usuarios/perfil/domicilio', methods=['GET', 'POST'])
+def address_profile():
+    if 'user' not in session:
+        return redirect(url_for('user.login', next=request.url))
+    
+    user = User.__get__(session.get('user')['id'])
+    if not user:
+        flash('Usuario no encontrado', 'danger')
+        return redirect(url_for('user.login'))
+
+    # Validar que el usuario tenga un domicilio
+    if not user.has_address():
+        flash('No tienes un domicilio registrado. Por favor, regístralo primero.', 'warning')
+        return redirect(url_for('user.address'))
+
+    form = ProfileAddressForm()
+    address = user.get_address()
+
+    # Si no hay dirección, no continuar
+    if not address:
+        flash('No se pudo obtener la dirección registrada. Por favor, regístrala.', 'warning')
+        return redirect(url_for('user.address'))
+
+    # Actualización del domicilio
+    if form.validate_on_submit():
+        address.id_estado = form.id_estado.data
+        address.municipio = form.municipio.data
+        address.cp = form.cp.data
+        address.tipo_asen = form.tipo_asen.data
+        address.asentamiento = form.asentamiento.data
+        address.calle = form.calle.data
+        address.num_ext = form.num_ext.data
+        address.num_int = form.num_int.data
+        address.save()
+
+        flash('Domicilio actualizado correctamente.', 'success')
+
+    if form.errors:
+        # Si hay errores en el formulario
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f"Verifica tus datos, {error}", 'danger')
+
+    # Prellenar el formulario con los datos del domicilio
+    form.id_estado.data = address.id_estado
+    form.municipio.data = address.municipio
+    form.cp.data = address.cp
+    form.tipo_asen.data = address.tipo_asen
+    form.asentamiento.data = address.asentamiento
+    form.calle.data = address.calle
+    form.num_ext.data = address.num_ext
+    form.num_int.data = address.num_int
+
+    return render_template('auth/address_profile.html', form=form)
 
 @user_views.route('/cerrar_sesión/')  
 def logout():

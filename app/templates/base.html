@@ -25,14 +25,14 @@
 
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
             <li><a href="{{ url_for('home.index') }}" class="nav-link" style="color: #8E44AD;">Inicio</a></li>
-            <li><a href="{{ url_for('home.loan') }}" class="nav-link" style="color: #8E44AD;">Préstamos</a></li>
+            <li><a href="{{ url_for('home.pre_loan') }}" class="nav-link" style="color: #8E44AD;">Préstamos</a></li>
             <li><a href="{{ url_for('home.about') }}" class="nav-link" style="color: #8E44AD;">¿Quiénes Somos?</a></li>
         </ul>
 
         <div class="col-md-3 text-end">
             {% if session.get('user') %}
             <button type="button" class="btn btn-outline-primary me-2" ><a href="{{ url_for('user.logout') }}" class="nav-link px-2">Cerrar Sesión</a></button>
-            <button type="button" class="btn btn-primary" ><a href="{{ url_for('user.profile') }}" class="nav-link px-2">Mi Perfil</a></button>
+            <button type="button" class="btn btn-primary" ><a href="{{ url_for('user.profile') }}" class="nav-link px-2">Mis Datos</a></button>
             {% else %}
             <button type="button" class="btn btn-outline-primary me-2"><a href="{{ url_for('user.login') }}" class="nav-link px-2">Iniciar Sesión</a></button>
             <button type="button" class="btn btn-primary"><a href="{{ url_for('user.register') }}" class="nav-link px-2">Registrarse</a></button>

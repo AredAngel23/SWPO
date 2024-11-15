@@ -118,6 +118,11 @@
         <div class="form-field">
             <label for="{{ form.tel_casa.id_for_label }}">Teléfono Casa (opcional):</label>  
             {{ form.tel_casa(class="input-field", placeholder="Teléfono Casa") }} 
+            {% if form.tel_casa.errors %}
+                    {% for error in form.tel_casa.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+            {% endif %}
         </div>
     
         <div class="form-field">

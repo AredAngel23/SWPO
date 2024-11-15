@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+    
+{% block title %}Préstamos{% endblock %}
+
+{% block customCSS %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/loan.css') }}"> 
+{% endblock %}
+
+{% block content %}  
+
+<div>
+    {% if not is_approved %}
+    <!-- Mensaje para usuarios no aprobados -->
+    <p> 
+        Espera a la revisión de tus datos personales <br>
+        Para solicitar un préstamo <br>
+        Este proceso podría demorar hasta 2 días máximo, mantente al pendiente de la página para tu aprobación <br>
+        Una vez aprobado, proporciona tus datos domiciliarios para proceder con el préstamo <br>
+    </p>
+    {% else %}
+    <!-- Mensaje para usuarios aprobados -->
+    <p>
+        Tus datos fueron verificados y has sido aprobado para solicitar un préstamo <br>
+        Presiona el siguiente botón para continuar con el proceso 
+    </p>
+    <button class="purple-button" style="margin-left: 23rem;">
+        <a class="primerlink" href="{{ url_for('loan.solicitar') }}">Solicita tu préstamo</a>
+    </button>
+    {% endif %}
+</div>
+
+{% endblock %}

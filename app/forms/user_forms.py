@@ -37,8 +37,18 @@ class RegisterForm(FlaskForm):
                                 )
     ingresos_mensuales = FloatField("Ingresos Mensuales: ", validators=[DataRequired(), NumberRange(min=0, message="El ingreso mensual no puede ser negativo")])    
     curp = StringField("Curp: ", validators=[DataRequired(), Length(min=18, max=18)])
-    tel_cel = TelField("Tel Cel: ", validators=[DataRequired(), Length(min=10, max=10), Regexp(r'^\+?\d{1,4}?[ .-]?\(?\d{1,3}?\)?[ .-]?\d{1,4}[ .-]?\d{1,4}$', message="Formato de teléfono inválido")])
-    tel_casa = TelField("Tel Casa: ", validators=[Optional(), Length(min=10, max=10), Regexp(r'^\+?\d{1,4}?[ .-]?\(?\d{1,3}?\)?[ .-]?\d{1,4}[ .-]?\d{1,4}$', message="Formato de teléfono inválido")])
+    tel_cel = TelField("Tel Cel: ",
+                       validators=[DataRequired(),
+                                   Length(min=10, max=10),
+                                   Regexp(r'^\+?\d{1,4}?[ .-]?\(?\d{1,3}?\)?[ .-]?\d{1,4}[ .-]?\d{1,4}$',
+                                          message="Formato de teléfono inválido")]
+                                          )
+    tel_casa = TelField("Tel Casa: ",
+                        validators=[Optional(),
+                                    Length(min=10, max=10),
+                                    Regexp(r'^\+?\d{1,4}?[ .-]?\(?\d{1,3}?\)?[ .-]?\d{1,4}[ .-]?\d{1,4}$',
+                                           message="Formato de teléfono inválido")]
+                                           )
     email = EmailField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Contraseña', validators=[DataRequired(), Length(min=5, max=50), EqualTo('password_confirm', message='Las contraseñas deben coincidir')])
     password_confirm = PasswordField('Confirmar Contraseña', validators=[DataRequired()])
@@ -65,7 +75,6 @@ class RegisterForm(FlaskForm):
         if User.check_email(field.data):
             raise ValidationError('El correo ya existe')
 
-################ Formulario de Perfil ################
 class ProfileForm(FlaskForm):
     nombre = StringField("Nombre: ", validators=[DataRequired(), Length(min=4, max=25)])
     ape_pat = StringField("Apellido Paterno: ", validators=[DataRequired(), Length(min=4, max=25)])      
@@ -87,13 +96,13 @@ class ProfileForm(FlaskForm):
                                    Length(min=10, max=10), 
                                    Regexp(r'^\+?\d{1,4}?[ .-]?\(?\d{1,3}?\)?[ .-]?\d{1,4}[ .-]?\d{1,4}$', 
                                           message="Formato de teléfono inválido")]
-                        )
+                                          )
     tel_casa = TelField("Tel Casa: ", 
                         validators=[Optional(), 
                                     Length(min=10, max=10), 
                                     Regexp(r'^\+?\d{1,4}?[ .-]?\(?\d{1,3}?\)?[ .-]?\d{1,4}[ .-]?\d{1,4}$', 
                                            message="Formato de teléfono inválido")]
-                        )
+                                           )
     email = EmailField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Guardar Cambios')
 
