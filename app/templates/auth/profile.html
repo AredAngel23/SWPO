@@ -13,7 +13,22 @@
     <h1>Datos Personales</h1>
 
     <form action="" method="post" class="modern-form">
+
         {{ form.csrf_token }}
+
+        {% if has_address %}
+            <div class="form-field">
+                <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" 
+                    href="{{ url_for('user.address_profile') }}">Ver Datos de Domicilio >>
+                </a>
+            </div>
+        {% else %}
+            <div class="form-field">
+                <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" 
+                    href="{{ url_for('user.address') }}">Registrar Domicilio >>
+                </a>
+            </div>
+        {% endif %}
 
         <div class="form-field">
             <label for="{{ form.nombre.id_for_label }}">Nombre:</label>
@@ -136,8 +151,7 @@
     </form>
 
     <hr>
-    <h2>Cambiar contraseña</h2>
-    <hr>
+    <h1>Cambiar contraseña</h1>
 
     <form method="POST" action="" , enctype="multipart/form-data" class="modern-form">
         {{ password_form.hidden_tag() }}
@@ -157,18 +171,9 @@
             {{ password_form.confirm_password(class="input-field") }}
         </div>
 
-        <button type="submit" class="btn btn-primary">Cambiar contraseña</button>
+        <button type="submit" class="submit-button">Cambiar contraseña</button>
     </form>
 
-</div>
-
-<div>
-    {% if not has_address %}
-    {% else %}
-    <button class="purple-button" style="margin-left: 23rem;">
-        <a class="primerlink" href="{{ url_for('user.address_profile') }}">Ver Datos de Domicilio</a>
-    </button>
-    {% endif %}
 </div>
 
 {% endblock %}

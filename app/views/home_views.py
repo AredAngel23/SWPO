@@ -1,9 +1,6 @@
-from flask import Blueprint, render_template, session, redirect, url_for
-from datetime import datetime
+from flask import Blueprint, render_template, request, session, redirect, url_for, flash
 
-from models.loans import Loan
-
-from forms.loan_forms import LoanForm 
+from models.users import User
 
 home_views = Blueprint('home',__name__)
 
@@ -12,39 +9,28 @@ def index():
     user = session.get('user')
     return render_template('home/index.html')
 
-@home_views.route('/préstamo/', methods = ['GET', 'POST'])
-def loan():
+@home_views.route('/info_préstamo/')
+def pre_loan():
     if 'user' not in session:
-        # Si el usuario no ha iniciado sesión, redirecciona a la página de inicio de sesión
+        return redirect(url_for('user.login', next=request.url))
+    
+    user = User.__get__(session['user']['id'])
+    if not user:    
+        flash('Usuario no encontrado', 'danger')
         return redirect(url_for('user.login'))
     
-    if 'address_registered' not in session:
-        # Si el usuario no ha registrado su domicilio, redirecciona a la página de registro de domicilio
-        return redirect(url_for('user.address')) 
+    if user.is_approved == 0:
+        flash('Tu cuenta está pendiente de aprobación por un administrador.', 'warning')
+        is_approved = 0
+    elif user.is_approved == 1:
+        flash('Tus datos han sido verificados y aprobados con exito.', 'success')
+        is_approved = 1
+        #return redirect(url_for('loan.solicitar'))
+    else:
+        is_approved = 2
+        flash('Tu cuenta ha sido rechazada por un administrador.', 'danger')
 
-    form = LoanForm()
-
-    if form.validate_on_submit():
-        id_cliente = session.get('user')['id']
-        monto = form.monto.data
-        periodo = form.periodo.data
-        modalidad_pago = form.modalidad_pago.data
-        fecha_in = datetime.utcnow()
-        
-        user = Loan(id_cliente, monto, periodo, modalidad_pago, fecha_in)
-        user.save()
-
-        # Guardamos los datos en la sesión para usarlos en la función de redireccionamiento
-        session['loan_data'] = {
-            'monto': monto,
-            'periodo': periodo,
-            'modalidad_pago': modalidad_pago,
-            'fecha_in': fecha_in
-        }
-
-        return redirect(url_for('loan.pre_loan'))
-    
-    return render_template('home/loan.html', form = form)    
+    return render_template('home/info_loan.html', is_approved=is_approved)    
 
 @home_views.route('/about/')
 def about():

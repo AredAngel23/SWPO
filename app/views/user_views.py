@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, request, url_for, abort, session
+from flask import Blueprint, render_template, flash, redirect, request, url_for, session
 
 from models.users import User
 from models.address import Address
@@ -23,7 +23,6 @@ def login():
         else:
             session['user'] = {'email': email, 'id': user.id_usuario, 'rol': user.rol}
 
-            # Redirigir a "next_url" si está definida, o a una vista por defecto
             if user.rol == 'cliente':
                 return redirect(next_url or url_for('home.index'))
             else:
@@ -98,12 +97,6 @@ def profile():
 
         flash('Perfil actualizado correctamente', 'success')
 
-    if form.errors:
-        # Si hay errores en el formulario
-        for field, errors in form.errors.items():
-            for error in errors:
-                flash(f"Verifica tus datos, {error}", 'danger')
-
     # Cambio de contraseña
     if password_form.validate_on_submit():
         old_password = password_form.old_password.data
@@ -138,6 +131,9 @@ def address():
         return redirect(url_for('user.login', next=request.url))
 
     user = User.__get__(session['user']['id'])
+    if not user:    
+        flash('Usuario no encontrado', 'danger')
+        return redirect(url_for('user.login'))
 
     # Verificar si el domicilio ya ha sido registrado
     if user.has_address():
@@ -189,11 +185,6 @@ def address_profile():
 
     form = ProfileAddressForm()
     address = user.get_address()
-
-    # Si no hay dirección, no continuar
-    if not address:
-        flash('No se pudo obtener la dirección registrada. Por favor, regístrala.', 'warning')
-        return redirect(url_for('user.address'))
 
     # Actualización del domicilio
     if form.validate_on_submit():

@@ -22,13 +22,12 @@
                 {% for message in messages %}
                     <div class="alert alert-primary alert-dismissible" role="alert">
                         <strong>{{ message }}</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
-        <h1 class="h3 mb-3 fw-normal">Iniciar Sesión</h1>
+        <h1 class="h2 mb-3 fw-normal">Iniciar Sesión</h1>
 
         <div class="form-floating">
             <input type="text" class="form-control" id="email" name="email" placeholder="Email">

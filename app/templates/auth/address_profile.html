@@ -17,6 +17,12 @@
         {{ form.csrf_token }}
 
         <div class="form-field">
+            <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" 
+                href="{{ url_for('user.profile') }}"><< Regresar
+            </a>
+        </div>
+
+        <div class="form-field">
             <label for="{{ form.id_estado.id_for_label }}">Estado:</label>
             {{ form.id_estado(class="input-field", placeholder="Estado") }}
             {% if form.id_estado.errors %}

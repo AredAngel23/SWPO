@@ -20,7 +20,7 @@ class User:
                  email,
                  password,
                  rol='cliente',
-                 is_approved=False,  # Nuevo campo para aprobación del administrador
+                 is_approved=0,
                  id_usuario = None):
         self.id_usuario = id_usuario
         self.nombre = nombre
@@ -37,23 +37,44 @@ class User:
         self.email = email
         self.rol = rol
         self.password = password
-        self.is_approved = is_approved  # Asignación del nuevo campo
+        self.is_approved = is_approved
 
     def save(self):
         if self.id_usuario is None:
+            # Insertar un nuevo usuario
             with mydb.cursor() as cursor:
+                # Hasheamos la contraseña antes de guardar
                 self.password = generate_password_hash(self.password, method='pbkdf2:sha256', salt_length=8)
-                sql = "INSERT INTO clientes (nombre, ape_pat, ape_mat, id_genero, fecha_nacimiento, id_nivelEdu, id_ocupacion, ingresos_mensuales, curp, tel_cel, tel_casa, email, password) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                val = (self.nombre, self.ape_pat, self.ape_mat, self.id_genero, self.fecha_nacimiento, self.id_nivelEdu, self.id_ocupacion, self.ingresos_mensuales, self.curp, self.tel_cel, self.tel_casa, self.email, self.password)
+                sql = """
+                    INSERT INTO clientes 
+                    (nombre, ape_pat, ape_mat, id_genero, fecha_nacimiento, id_nivelEdu, id_ocupacion, 
+                    ingresos_mensuales, curp, tel_cel, tel_casa, email, password, is_approved) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """
+                val = (
+                    self.nombre, self.ape_pat, self.ape_mat, self.id_genero, self.fecha_nacimiento, 
+                    self.id_nivelEdu, self.id_ocupacion, self.ingresos_mensuales, self.curp, 
+                    self.tel_cel, self.tel_casa, self.email, self.password, self.is_approved
+                )
                 cursor.execute(sql, val)
                 mydb.commit()
                 self.id_usuario = cursor.lastrowid
                 return self.id_usuario
         else:
+            # Actualizar un usuario existente
             with mydb.cursor() as cursor:
-                sql = 'UPDATE clientes SET nombre = %s, ape_pat = %s, ape_mat = %s, id_genero = %s, fecha_nacimiento = %s, id_nivelEdu = %s, id_ocupacion = %s, ingresos_mensuales = %s, curp = %s, tel_cel = %s, tel_casa = %s '
-                sql += 'WHERE id_usuario = %s'
-                val = (self.nombre, self.ape_pat, self.ape_mat, self.id_genero, self.fecha_nacimiento, self.id_nivelEdu, self.id_ocupacion, self.ingresos_mensuales, self.curp, self.tel_cel, self.tel_casa, self.id_usuario)
+                sql = """
+                    UPDATE clientes 
+                    SET nombre = %s, ape_pat = %s, ape_mat = %s, id_genero = %s, fecha_nacimiento = %s, 
+                    id_nivelEdu = %s, id_ocupacion = %s, ingresos_mensuales = %s, curp = %s, 
+                    tel_cel = %s, tel_casa = %s, is_approved = %s
+                    WHERE id_usuario = %s
+                """
+                val = (
+                    self.nombre, self.ape_pat, self.ape_mat, self.id_genero, self.fecha_nacimiento, 
+                    self.id_nivelEdu, self.id_ocupacion, self.ingresos_mensuales, self.curp, 
+                    self.tel_cel, self.tel_casa, self.is_approved, self.id_usuario
+                )
                 cursor.execute(sql, val)
                 mydb.commit()
                 return self.id_usuario
@@ -89,10 +110,26 @@ class User:
                             password=user["password"],
                             rol=user['rol'],
                             id_usuario=id_usuario,
-                            is_approved=user["is_approved"])  # Incluye todos los campos necesarios
+                            is_approved=user["is_approved"])
                 return user
             
             return None
+        
+    @staticmethod
+    def get_clients():
+        with mydb.cursor(dictionary=True) as cursor:
+            sql = f"SELECT * FROM vistaclientes"
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            return result
+        
+    @staticmethod
+    def get_users():
+        with mydb.cursor(dictionary=True) as cursor:
+            sql = f"SELECT * FROM vistausuarios"
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            return result
         
     @staticmethod
     def check_email(email):
@@ -119,15 +156,7 @@ class User:
                 if check_password_hash(user["password"], password):
                     return User.__get__(user["id_usuario"])
             return None
-        
-    @staticmethod
-    def get_all():
-        with mydb.cursor(dictionary=True) as cursor:
-            sql = f"SELECT * FROM vistaclientes"
-            cursor.execute(sql)
-            result = cursor.fetchall()
-            return result
-        
+          
     @staticmethod
     def get_genero():
         with mydb.cursor() as cursor:
@@ -179,3 +208,46 @@ class User:
                     return "La contraseña actual es incorrecta"
             else:
                 return "Usuario no encontrado"
+            
+    def has_address(self):
+        with mydb.cursor(dictionary=True) as cursor:
+            sql = "SELECT COUNT(*) AS count FROM domicilio WHERE id_cliente = %s"
+            val = (self.id_usuario,)
+            cursor.execute(sql, val)
+            result = cursor.fetchone()
+            return result['count'] > 0
+    
+    # Importación diferida dentro del método o función donde se use Address
+    def get_address(self):
+        from models.address import Address
+        with mydb.cursor(dictionary=True) as cursor:
+                sql = "SELECT * FROM domicilio WHERE id_cliente = %s LIMIT 1"
+                val = (self.id_usuario,)
+                cursor.execute(sql, val)
+
+                address = cursor.fetchone()
+
+                if address:
+                    address = Address(id_estado=address['id_estado'],
+                                    municipio=address['municipio'],
+                                    cp=address['cp'],
+                                    tipo_asen=address['tipo_asen'],
+                                    asentamiento=address['asentamiento'],
+                                    calle=address['calle'],
+                                    num_ext=address['num_ext'],
+                                    num_int=address['num_int'],
+                                    id_cliente=address['id_cliente'],
+                                    id_domicilio=address['id_domicilio'])
+                    return address
+                
+                return None
+        
+        # from models.address import Address
+        # with mydb.cursor(dictionary=True) as cursor:
+        #     sql = "SELECT * FROM domicilio WHERE id_cliente = %s LIMIT 1"
+        #     val = (self.id_usuario,)
+        #     cursor.execute(sql, val)    
+        #     result = cursor.fetchone()
+        #     if result:
+        #         return Address(**result)
+        #     return None

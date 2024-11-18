@@ -1,0 +1,56 @@
+{% extends 'base_admin2.html' %}
+    
+{% block title %}Domicilio-Clientes{% endblock %}
+
+{% block customCSS %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+{% endblock %}
+
+{% block content %}
+      <main>
+        <div class="header">
+          <h1>Administración - Préstamos Ortega</h1>
+          <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="logo" class="logo">
+        </div>
+        <hr>
+        <div>
+          <h2>Domicilio del cliente: {{ name }}</h2>
+          {% if address %}
+              <table>
+                  <thead>
+                      <tr>
+                          <th>Estado</th>
+                          <th>Municipio</th>
+                          <th>Código Postal</th>
+                          <th>Tipo de Asentamiento</th>
+                          <th>Nombre de Asentamiento</th>
+                          <th>Calle</th>
+                          <th>Número Exterior</th>
+                          <th>Número Interior</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td>{{ address.estado }}</td>
+                          <td>{{ address.municipio }}</td>
+                          <td>{{ address.codigo_postal }}</td>
+                          <td>{{ address.tipoAsen }}</td>
+                          <td>{{ address.nombre_asentamiento }}</td>
+                          <td>{{ address.calle }}</td>
+                          <td>{{ address.num_ext }}</td>
+                          <td>{{ address.num_int }}</td>
+                      </tr>
+                  </tbody>
+              </table>
+
+                <button type="button" class="desplazamiento">
+                    <a href="{{ url_for('admin.mostrar_clientes') }}">
+                        Regresar
+                    </a>
+                </button>
+          {% else %}
+              <p>El Cliente aún no registra su domicilio</p>
+          {% endif %}
+        </div>
+      </main>
+{% endblock %}

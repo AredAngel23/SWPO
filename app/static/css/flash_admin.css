@@ -1,0 +1,41 @@
+/* Contenedor general de mensajes flash */
+.flash-messages {
+    margin: 10px 0; /* Separación vertical */
+    padding: 0 10px; /* Alineación horizontal */
+}
+
+/* Mensaje individual */
+.flash-message {
+    padding: 15px;
+    margin-bottom: 10px; /* Separación entre mensajes */
+    border-radius: 5px; /* Bordes redondeados */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    font-size: 1rem;
+    color: #333333; /* Texto en blanco */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Categorías de mensajes */
+.flash-message.success {
+    background-color: #d7ffd1; /* Verde para éxito */
+}
+
+.flash-message.error {
+    background-color: #ffd1d1; /* Rojo para error */
+}
+
+.flash-message.info {
+    background-color: #d1f4ff; /* Azul para información */
+}
+
+.flash-message.warning {
+    background-color: #fcffd1; /* Naranja para advertencias */
+}
+
+/* Ícono opcional (puedes usar FontAwesome o similar) */
+.flash-message::before {
+    content: '⚠️'; /* Un ejemplo simple, se puede reemplazar con un ícono real */
+    font-size: 1.2rem;
+}

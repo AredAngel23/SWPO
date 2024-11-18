@@ -9,16 +9,13 @@
 {% block content %}  
 
 <div>
-    {% if not is_approved %}
-    <!-- Mensaje para usuarios no aprobados -->
+    {% if is_approved == 0 %}
     <p> 
-        Espera a la revisión de tus datos personales <br>
-        Para solicitar un préstamo <br>
+        Espera a la revisión de tus datos personales por un administrador para poder solicitar un préstamo <br>
         Este proceso podría demorar hasta 2 días máximo, mantente al pendiente de la página para tu aprobación <br>
         Una vez aprobado, proporciona tus datos domiciliarios para proceder con el préstamo <br>
     </p>
-    {% else %}
-    <!-- Mensaje para usuarios aprobados -->
+    {% elif is_approved == 1 %}
     <p>
         Tus datos fueron verificados y has sido aprobado para solicitar un préstamo <br>
         Presiona el siguiente botón para continuar con el proceso 
@@ -26,6 +23,10 @@
     <button class="purple-button" style="margin-left: 23rem;">
         <a class="primerlink" href="{{ url_for('loan.solicitar') }}">Solicita tu préstamo</a>
     </button>
+    {% elif is_approved == 2 %}
+    <p>
+        ctm
+    </p>
     {% endif %}
 </div>
 

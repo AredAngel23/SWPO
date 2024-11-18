@@ -1,129 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administración de Préstamos</title>
-    <!-- Agrega tus enlaces a archivos CSS y JavaScript aquí -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    {% block customCSS %}
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}"> 
-    {% endblock %}
-</head>
-<body>
-    <div class="position-relative overflow-hidden p-3 text-center bg-body-tertiary">
-        <h1 class="fw-normal">Préstamos Ortega</h1>
+{% extends 'base_admin2.html' %}
+    
+{% block title %}Administración-Préstamos Ortega{% endblock %}
 
-    <div class="container-fluid">
-        <div class="row">
-          <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
-            <div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
-              <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
-                <ul class="nav flex-column">
-                  <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="#">
-                      <svg class="bi"><use xlink:href="#house-fill"/></svg>
-                      Dashboard
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" href="#">
-                      <svg class="bi"><use xlink:href="#cart"/></svg>
-                      Préstamos
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" href="{{ url_for('admin.mostrar_usuarios') }}">
-                      <svg class="bi"><use xlink:href="#people"/></svg> 
-                      Clientes
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" href="#">
-                      <svg class="bi"><use xlink:href="#graph-up"/></svg>
-                      Reportes
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" href="#">
-                      <svg class="bi"><use xlink:href="#puzzle"/></svg>
-                      Integraciones
-                    </a>
-                  </li>
-                </ul>
-      
-                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
-                  <span>Reporte de Pagos</span>
-                  <a class="link-secondary" href="#" aria-label="Add a new report">
-                    <svg class="bi"><use xlink:href="#plus-circle"/></svg>
-                  </a>
-                </h6>
-                <ul class="nav flex-column mb-auto">
-                  <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" href="#">
-                      <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
-                      Pagos por Mes
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" href="#">
-                      <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
-                      Último Pago
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" href="#">
-                      <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
-                      Redes Sociales
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" href="#">
-                      <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
-                      Ganancias
-                    </a>
-                  </li>
-                </ul>
-      
-                <hr class="my-3">
-      
-                <ul class="nav flex-column mb-auto">
-                  <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" href="#">
-                      <svg class="bi"><use xlink:href="#gear-wide-connected"/></svg>
-                      Configuración
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" href="{{ url_for('user.logout') }}">
-                      <svg class="bi"><use xlink:href="#door-closed"/></svg>
-                      Cerrar Sesión
-                    </a>
-                  </li>
-                </ul>
-              </div>
+{% block customCSS %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/flash_admin.css') }}">
+{% endblock %}
+
+{% block content %}
+      <main>
+        <!-- Mensajes flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
             </div>
-          </div>
-    </div>
-
-          {% block content %}
-          {% endblock %}
-
-          <div class="container">
-            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4">
-              <div class="col-md-4 d-flex align-items-center">
-                <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
-                  <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"/></svg>
-                </a>
-                <span class="mb-3 mb-md-0 text-body-secondary">&copy; 2023 Company, Inc</span>
-              </div>
-          
-              <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-                <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"/></svg></a></li>
-                <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"/></svg></a></li>
-                <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"/></svg></a></li>
-              </ul>
-            </footer>
-          </div>
-</body>
-</html>
+        {% endif %}
+        {% endwith %}
+        <div class="header">
+          <h1>Administración - Préstamos Ortega</h1>
+          <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="logo" class="logo">
+        </div>
+        <hr>
+        <div>
+          <h2>Usuarios registrados sin aprobar</h2>
+          {% if users %}
+              <table>
+                  <thead>
+                      <tr>
+                          <th>Nombre</th>
+                          <th>Género</th>
+                          <th>Fecha de Nacimiento</th>
+                          <th>Nivel Educativo</th>
+                          <th>Ocupación</th>
+                          <th>Ingresos Mensuales</th>
+                          <th>CURP</th>
+                          <th>Teléfono</th>
+                          <th>Teléfono Casa</th>
+                          <th>Correo</th>
+                          <th>Acciones</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for usuario in users %}
+                      <tr>
+                          <td>{{ usuario.nombre }} {{ usuario.ape_pat }} {{ usuario.ape_mat }}</td>
+                          <td>{{ usuario.genero }}</td>
+                          <td>{{ usuario.fecha_nacimiento }}</td>
+                          <td>{{ usuario.nivelEdu }}</td>
+                          <td>{{ usuario.ocupacion }}</td>
+                          <td>${{ usuario.ingresos_mensuales }}</td>
+                          <td>{{ usuario.curp }}</td>
+                          <td>{{ usuario.tel_cel }}</td>
+                          <td>{{ usuario.tel_casa }}</td>
+                          <td>{{ usuario.email }}</td>
+                          <td>
+                            <button class="approve">
+                              <a href="{{ url_for('admin.aprobar_usuario', id_usuario=usuario.id_usuario) }}" 
+                                 onclick="return confirm('¿Estás seguro de que deseas aprobar a este usuario?');">
+                                  Aprobar
+                              </a>
+                            </button>
+                            <button class="reject">
+                              <a href="{{ url_for('admin.rechazar_usuario', id_usuario=usuario.id_usuario) }}"
+                                 onclick="return confirm('¿Estás seguro de que deseas rechazar a este usuario?');">
+                                  Rechazar
+                              </a>
+                            </button>
+                          </td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+          {% else %}
+              <p>No hay usuarios pendientes de aprobación.</p>
+          {% endif %}
+        </div>
+      </main>
+{% endblock %}
