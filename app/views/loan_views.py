@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for, flash
 from datetime import datetime
+from utils.decorators import client_required
 
 from models.loans import Loan
 from models.users import User
@@ -9,11 +10,15 @@ from forms.loan_forms import LoanForm
 loan_views = Blueprint('loan',__name__)
 
 @loan_views.route('/préstamo/solicitar', methods=['GET', 'POST'])
+@client_required
 def solicitar():
     if 'user' not in session:
         return redirect(url_for('user.login'))
     
     user = User.__get__(session['user']['id'])
+    if not user:    
+        flash('Usuario no encontrado', 'danger')
+        return redirect(url_for('user.login'))
 
     if not user.is_approved:
         flash('Tu cuenta está pendiente de aprobación. No puedes solicitar un préstamo aún.', 'warning')
@@ -50,6 +55,7 @@ def solicitar():
     return render_template('loan/solicitar_loan.html', form=form) 
 
 @loan_views.route('/préstamo/previo/', methods=['GET'])
+@client_required
 def loan():
     # Obtenemos los datos de la sesión
     loan_data = session.get('loan_data')
@@ -79,6 +85,7 @@ def loan():
         return "No se encontraron datos de préstamo previo."
 
 @loan_views.route('/préstamo/estado/')
+@client_required
 def estado():
     # Obtenemos los datos de la sesión
     loan_data = session.get('loan_data')
@@ -104,5 +111,6 @@ def estado():
     return render_template('loan/estado_loan.html', monto=monto, periodo=periodo, modalidad=modalidad, monto_total=monto_total)
 
 @loan_views.route('/préstamo/pagos/')
+@client_required
 def pagos():
     return render_template('loan/pagos_loan.html')

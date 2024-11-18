@@ -25,13 +25,20 @@ def login():
 
             if user.rol == 'cliente':
                 return redirect(next_url or url_for('home.index'))
+            elif user.rol == 'admin':
+                return redirect(next_url or url_for('admin.admin'))
             else:
-                return redirect(url_for('admin.admin'))
+                flash('Rol de usuario no reconocido.', 'danger')
+                return redirect(url_for('user.login'))
     
     return render_template('auth/login.html', form=form)
 
 @user_views.route('/usuarios/registro/', methods = ['GET', 'POST'])
 def register():
+    if 'user' in session:
+        flash('Tus datos ya están registrados. Edita tus datos aquí si necesitas actualizarlos.', 'info')
+        return redirect(url_for('user.profile'))
+    
     form = RegisterForm()
 
     if form.validate_on_submit():
@@ -137,8 +144,8 @@ def address():
 
     # Verificar si el domicilio ya ha sido registrado
     if user.has_address():
-        flash('Ya has registrado tu domicilio. Si necesitas actualizarlo, por favor, ve a tu perfil.', 'info')
-        return redirect(url_for('loan.solicitar'))
+        flash('Ya has registrado tu domicilio. Edita tus datos aquí si necesitas actualizarlos.', 'info')
+        return redirect(url_for('user.address_profile'))
     
     form = AddressForm()
 
@@ -221,4 +228,5 @@ def address_profile():
 @user_views.route('/cerrar_sesión/')  
 def logout():
     session.clear()
+    flash('Sesión cerrada exitosamente.', 'success')
     return redirect(url_for('home.index'))

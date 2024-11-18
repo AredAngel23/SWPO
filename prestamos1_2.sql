@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-08-2024 a las 20:01:33
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Tiempo de generación: 18-11-2024 a las 18:57:24
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -36,23 +36,27 @@ CREATE TABLE `clientes` (
   `fecha_nacimiento` date NOT NULL,
   `id_nivelEdu` tinyint(4) NOT NULL,
   `id_ocupacion` tinyint(4) NOT NULL,
-  `ingresos_mensuales` float DEFAULT NULL,
+  `ingresos_mensuales` float UNSIGNED NOT NULL,
   `curp` varchar(18) NOT NULL,
   `tel_cel` varchar(10) NOT NULL,
-  `tel_casa` varchar(12) DEFAULT NULL,
+  `tel_casa` varchar(10) DEFAULT NULL,
   `email` varchar(254) NOT NULL,
-  `password` varchar(150) NOT NULL,
-  `rol` varchar(7) NOT NULL DEFAULT 'cliente'
+  `password` varchar(255) NOT NULL,
+  `rol` varchar(7) NOT NULL DEFAULT 'cliente',
+  `is_approved` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `clientes`
 --
 
-INSERT INTO `clientes` (`id_usuario`, `nombre`, `ape_pat`, `ape_mat`, `id_genero`, `fecha_nacimiento`, `id_nivelEdu`, `id_ocupacion`, `ingresos_mensuales`, `curp`, `tel_cel`, `tel_casa`, `email`, `password`, `rol`) VALUES
-(1, 'Angel', 'Perez', 'Rodriguez', 1, '2003-07-17', 3, 1, 2000, 'PERA030717HTLRDNA4', '2471014138', '', 'ared230000@gmail.com', 'pbkdf2:sha256:600000$AyQuHTTQHSbzYSMd$e2fb291a4889891ba1344e8a99513c53e523f2d06af522614f63767cc06b68cc', 'admin'),
-(2, 'Adriana', 'Medina', 'Montiel', 2, '2004-05-02', 3, 2, 2000, 'MEMD030723MTLRDPR4', '2471014131', '', 'adri@gmail.com', 'pbkdf2:sha256:600000$471yPAnI0TjdFiU7$475e17fa87a1b105b7b4b615b3cee9945c9c87c9d7b9613d05de14fe78185c98', 'cliente'),
-(6, 'Aldo', 'Perez', 'Rodriguez', 1, '2002-03-18', 4, 1, 3000, 'PERA030717HTLRDN03', '2471014130', '', 'prueba@gmail.com', 'pbkdf2:sha256:600000$hT7QkiJGVB9CZDQv$854cdb58e9ce7e06c0a9be9dc40c640dd9c0db4b51cd3b9aef66dea3a5284349', 'cliente');
+INSERT INTO `clientes` (`id_usuario`, `nombre`, `ape_pat`, `ape_mat`, `id_genero`, `fecha_nacimiento`, `id_nivelEdu`, `id_ocupacion`, `ingresos_mensuales`, `curp`, `tel_cel`, `tel_casa`, `email`, `password`, `rol`, `is_approved`) VALUES
+(1, 'Angel', 'Perez', 'Rodriguez', 1, '2003-07-17', 3, 1, 2000, 'PERA030717HTLRDNA4', '255', '0', 'ared230000@gmail.com', 'pbkdf2:sha256:600000$AyQuHTTQHSbzYSMd$e2fb291a4889891ba1344e8a99513c53e523f2d06af522614f63767cc06b68cc', 'admin', 1),
+(2, 'Adriana', 'Medina', 'Montiel', 2, '2004-05-02', 3, 2, 5000, 'MEMD030723MTLRDPR4', '2551342422', '', 'adri@gmail.com', 'pbkdf2:sha256:600000$471yPAnI0TjdFiU7$475e17fa87a1b105b7b4b615b3cee9945c9c87c9d7b9613d05de14fe78185c98', 'cliente', 1),
+(8, 'Angelica', 'Hernández', 'Lopez', 2, '1975-12-12', 4, 2, 7000, 'PERA030717HTLR1234', '2551342422', '', 'angy@gmail.com', 'pbkdf2:sha256:600000$kWTPIM13$b9f5fa426958410b4b1f2cc83c6701ccb64145c68db4d18c89a2576e182512ac', 'cliente', 2),
+(11, 'Brayan', 'Perez', 'Montiel', 1, '2001-11-11', 2, 2, 7000, 'PERA030717HTLRDN22', '2551342422', '', 'prueba2@gmail.com', 'pbkdf2:sha256:600000$cVlGjsId$906bd9406dd2b611bc5ba1b9f3d97fe3a3e5410c92d29274fc16168eafed9918', 'cliente', 0),
+(13, 'Diana', 'Hernández', 'Rodriguez', 2, '2001-12-12', 1, 1, 2500, 'PERA030717HTLRDNA7', '2471014132', '2713455540', 'prueba3@gmail.com', 'pbkdf2:sha256:600000$rYvmGAgK$0f2b6f0b6629ba885c567407d3ec5b0fe3c14d24febb921411fbb0916872a016', 'cliente', 0),
+(14, 'Angelica', 'Perez', 'Rodriguez', 1, '2005-04-18', 3, 3, 2000, 'PERA030717HTLRDNA7', '2551342422', '', 'prueba4@gmail.com', 'pbkdf2:sha256:600000$Enmh8Q17$4b8f46865a838c0593a6449ff1c4c94ae6ea177cceb000cfe90c9fe1e64e4575', 'cliente', 1);
 
 -- --------------------------------------------------------
 
@@ -79,9 +83,15 @@ CREATE TABLE `domicilio` (
 
 INSERT INTO `domicilio` (`id_domicilio`, `id_estado`, `municipio`, `cp`, `tipo_asen`, `asentamiento`, `calle`, `num_ext`, `num_int`, `id_cliente`) VALUES
 (1, 29, 'Huamantla', 90506, 30, 'Ignacio Zaragoza', 'Andador Los Reyes', 60, NULL, 1),
-(2, 29, 'Tetla ', 90000, 29, 'La Colina', 'Las Flores', 12, NULL, 2),
+(2, 29, 'Tetla ', 90501, 29, 'La Colina', 'Las Flores', 12, 4, 2),
 (3, 1, 'Huamantla', 2000, 1, 'La Colina', 'Río Coatzacoatcos ', 1, NULL, 2),
-(4, 1, 'Huamantla', 30000, 1, 'Ignacio Zaragoza', 'Las Flores', 60, NULL, 2);
+(4, 1, 'Huamantla', 30000, 1, 'Ignacio Zaragoza', 'Las Flores', 60, NULL, 2),
+(5, 29, 'Huamantla', 90506, 5, 'Nuevos Horizontes', 'Las Flores', 60, NULL, 8),
+(6, 29, 'Ixtenco', 90501, 26, 'Ignacio Zaragoza', 'Río Coatzacoatcos ', NULL, 23, 11),
+(7, 1, 'Huamantla', 12345, 27, 'La Colina', 'Las Flores', NULL, NULL, 2),
+(8, 2, 'Ixtenco', 90506, 14, 'La Colina', 'Las Flores', 2, NULL, 2),
+(9, 4, 'Ixtenco', 90506, 12, 'La Colina', 'Las Flores', 12, NULL, 2),
+(10, 4, 'Ixtenco', 90506, 12, 'La Colina', 'Las Flores', 12, NULL, 2);
 
 -- --------------------------------------------------------
 
@@ -210,7 +220,8 @@ CREATE TABLE `ocupacion` (
 
 INSERT INTO `ocupacion` (`id_ocupacion`, `ocupacion`) VALUES
 (1, 'Empleado del sector privado'),
-(2, 'Empleado del sector público');
+(2, 'Empleado del sector público'),
+(3, 'Desempleado');
 
 -- --------------------------------------------------------
 
@@ -234,7 +245,8 @@ CREATE TABLE `prestamos` (
 INSERT INTO `prestamos` (`id_prestamo`, `id_cliente`, `monto`, `periodo`, `modalidad_pago`, `fecha_in`) VALUES
 (1, 2, 1000, 2, 1, '2023-09-05 04:54:32'),
 (2, 2, 1000, 2, 1, '2023-09-05 04:56:03'),
-(3, 2, 1000, 2, 2, '2023-09-05 04:56:24');
+(3, 2, 1000, 2, 2, '2023-09-05 04:56:24'),
+(4, 8, 5000, 6, 1, '2024-11-15 12:14:38');
 
 -- --------------------------------------------------------
 
@@ -302,11 +314,53 @@ CREATE TABLE `vistaclientes` (
 ,`fecha_nacimiento` date
 ,`nivelEdu` varchar(30)
 ,`ocupacion` varchar(30)
-,`ingresos_mensuales` float
+,`ingresos_mensuales` float unsigned
 ,`curp` varchar(18)
 ,`tel_cel` varchar(10)
-,`tel_casa` varchar(12)
+,`tel_casa` varchar(10)
 ,`email` varchar(254)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vistausuarios`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vistausuarios` (
+`id_usuario` int(10)
+,`nombre` varchar(25)
+,`ape_pat` varchar(25)
+,`ape_mat` varchar(25)
+,`genero` varchar(10)
+,`fecha_nacimiento` date
+,`nivelEdu` varchar(30)
+,`ocupacion` varchar(30)
+,`ingresos_mensuales` float unsigned
+,`curp` varchar(18)
+,`tel_cel` varchar(10)
+,`tel_casa` varchar(10)
+,`email` varchar(254)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vista_domicilioxcliente`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vista_domicilioxcliente` (
+`id_domicilio` int(10)
+,`estado` varchar(35)
+,`municipio` varchar(50)
+,`codigo_postal` mediumint(5)
+,`tipoAsen` varchar(25)
+,`nombre_asentamiento` varchar(60)
+,`calle` varchar(50)
+,`num_ext` smallint(5) unsigned
+,`num_int` smallint(5) unsigned
+,`id_cliente` int(11)
+,`domicilio_de` varchar(25)
 );
 
 -- --------------------------------------------------------
@@ -316,7 +370,25 @@ CREATE TABLE `vistaclientes` (
 --
 DROP TABLE IF EXISTS `vistaclientes`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vistaclientes`  AS SELECT `clientes`.`id_usuario` AS `id_usuario`, `clientes`.`nombre` AS `nombre`, `clientes`.`ape_pat` AS `ape_pat`, `clientes`.`ape_mat` AS `ape_mat`, `genero`.`genero` AS `genero`, `clientes`.`fecha_nacimiento` AS `fecha_nacimiento`, `nivel_educativo`.`nivelEdu` AS `nivelEdu`, `ocupacion`.`ocupacion` AS `ocupacion`, `clientes`.`ingresos_mensuales` AS `ingresos_mensuales`, `clientes`.`curp` AS `curp`, `clientes`.`tel_cel` AS `tel_cel`, `clientes`.`tel_casa` AS `tel_casa`, `clientes`.`email` AS `email` FROM (((`clientes` join `genero` on(`clientes`.`id_genero` = `genero`.`id_genero`)) join `nivel_educativo` on(`clientes`.`id_nivelEdu` = `nivel_educativo`.`id_nivelEdu`)) join `ocupacion` on(`clientes`.`id_ocupacion` = `ocupacion`.`id_ocupacion`)) WHERE `clientes`.`rol` = 'cliente' ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vistaclientes`  AS SELECT `clientes`.`id_usuario` AS `id_usuario`, `clientes`.`nombre` AS `nombre`, `clientes`.`ape_pat` AS `ape_pat`, `clientes`.`ape_mat` AS `ape_mat`, `genero`.`genero` AS `genero`, `clientes`.`fecha_nacimiento` AS `fecha_nacimiento`, `nivel_educativo`.`nivelEdu` AS `nivelEdu`, `ocupacion`.`ocupacion` AS `ocupacion`, `clientes`.`ingresos_mensuales` AS `ingresos_mensuales`, `clientes`.`curp` AS `curp`, `clientes`.`tel_cel` AS `tel_cel`, `clientes`.`tel_casa` AS `tel_casa`, `clientes`.`email` AS `email` FROM (((`clientes` join `genero` on(`clientes`.`id_genero` = `genero`.`id_genero`)) join `nivel_educativo` on(`clientes`.`id_nivelEdu` = `nivel_educativo`.`id_nivelEdu`)) join `ocupacion` on(`clientes`.`id_ocupacion` = `ocupacion`.`id_ocupacion`)) WHERE `clientes`.`rol` = 'cliente' AND `clientes`.`is_approved` = 1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vistausuarios`
+--
+DROP TABLE IF EXISTS `vistausuarios`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vistausuarios`  AS SELECT `clientes`.`id_usuario` AS `id_usuario`, `clientes`.`nombre` AS `nombre`, `clientes`.`ape_pat` AS `ape_pat`, `clientes`.`ape_mat` AS `ape_mat`, `genero`.`genero` AS `genero`, `clientes`.`fecha_nacimiento` AS `fecha_nacimiento`, `nivel_educativo`.`nivelEdu` AS `nivelEdu`, `ocupacion`.`ocupacion` AS `ocupacion`, `clientes`.`ingresos_mensuales` AS `ingresos_mensuales`, `clientes`.`curp` AS `curp`, `clientes`.`tel_cel` AS `tel_cel`, `clientes`.`tel_casa` AS `tel_casa`, `clientes`.`email` AS `email` FROM (((`clientes` join `genero` on(`clientes`.`id_genero` = `genero`.`id_genero`)) join `nivel_educativo` on(`clientes`.`id_nivelEdu` = `nivel_educativo`.`id_nivelEdu`)) join `ocupacion` on(`clientes`.`id_ocupacion` = `ocupacion`.`id_ocupacion`)) WHERE `clientes`.`rol` = 'cliente' AND `clientes`.`is_approved` = 0 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vista_domicilioxcliente`
+--
+DROP TABLE IF EXISTS `vista_domicilioxcliente`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_domicilioxcliente`  AS SELECT `domicilio`.`id_domicilio` AS `id_domicilio`, `estados`.`estado` AS `estado`, `domicilio`.`municipio` AS `municipio`, `domicilio`.`cp` AS `codigo_postal`, `tipos_asen`.`tipoAsen` AS `tipoAsen`, `domicilio`.`asentamiento` AS `nombre_asentamiento`, `domicilio`.`calle` AS `calle`, `domicilio`.`num_ext` AS `num_ext`, `domicilio`.`num_int` AS `num_int`, `domicilio`.`id_cliente` AS `id_cliente`, `clientes`.`nombre` AS `domicilio_de` FROM (((`domicilio` join `estados` on(`domicilio`.`id_estado` = `estados`.`id_estado`)) join `tipos_asen` on(`domicilio`.`tipo_asen` = `tipos_asen`.`id_tipo_asen`)) join `clientes` on(`domicilio`.`id_cliente` = `clientes`.`id_usuario`)) ;
 
 --
 -- Índices para tablas volcadas
@@ -394,13 +466,13 @@ ALTER TABLE `tipos_asen`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id_usuario` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_usuario` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `domicilio`
 --
 ALTER TABLE `domicilio`
-  MODIFY `id_domicilio` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_domicilio` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `genero`
@@ -424,13 +496,13 @@ ALTER TABLE `nivel_educativo`
 -- AUTO_INCREMENT de la tabla `ocupacion`
 --
 ALTER TABLE `ocupacion`
-  MODIFY `id_ocupacion` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_ocupacion` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `prestamos`
 --
 ALTER TABLE `prestamos`
-  MODIFY `id_prestamo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_prestamo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_asen`
