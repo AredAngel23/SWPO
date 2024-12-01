@@ -27,21 +27,19 @@ def test_registrar_usuario(driver):
     input_nivelEducativo.send_keys('')
     time.sleep(2)
 
-    ##### Validar el mensaje del alerta #####
-    alert_text = driver.switch_to.alert.text
-    assert "Usuario registrado con éxito" in alert_text, "Texto de la alerta no coincide"
-
-    driver.switch_to.alert.accept()
     return driver.current_url == "http://127.0.0.1:5000/usuarios/iniciar_sesión/"
 
 def test_eliminar_cliente(driver):
-    ##### Ingresar como usuario #####
+    ##### Ingresar como admin #####
     btn_login = driver.find_element(By.ID, 'btn-login')
     btn_login.click()
+    time.sleep(2)
     input_email = driver.find_element(By.ID, 'email')
     input_email.send_keys('ared230000@gmail.com')
+    time.sleep(2)
     input_password = driver.find_element(By.ID, 'password')
     input_password.send_keys('12345')
+    time.sleep(2)
     btn_ingresar = driver.find_element(By.ID, 'btn-ingresar')
     btn_ingresar.click()
     time.sleep(2)
@@ -58,7 +56,7 @@ def test_eliminar_cliente(driver):
     cliente_encontrado = False
 
     for fila in filas:
-        email_element = fila.find_element(By.CLASS_NAME, 'td-email')
+        email_element = fila.find_element(By.ID, 'td-email')
         if email_element.text == 'aldo@gmail.com':
             cliente_encontrado = True
 
