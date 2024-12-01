@@ -31,11 +31,11 @@
 
         <div class="col-md-3 text-end">
             {% if session.get('user') %}
-            <button type="button" class="btn btn-outline-primary me-2" ><a href="{{ url_for('user.logout') }}" class="nav-link px-2">Cerrar Sesión</a></button>
-            <button type="button" class="btn btn-primary" ><a href="{{ url_for('user.profile') }}" class="nav-link px-2">Mis Datos</a></button>
+            <button type="button" class="btn btn-outline-primary me-2" ><a href="{{ url_for('user.logout') }}" class="nav-link px-2" id="link-logout">Cerrar Sesión</a></button>
+            <button type="button" class="btn btn-primary" ><a href="{{ url_for('user.profile') }}" class="nav-link px-2" id="link-perfil">Mis Datos</a></button>
             {% else %}
-            <button type="button" class="btn btn-outline-primary me-2"><a href="{{ url_for('user.login') }}" class="nav-link px-2">Iniciar Sesión</a></button>
-            <button type="button" class="btn btn-primary"><a href="{{ url_for('user.register') }}" class="nav-link px-2">Registrarse</a></button>
+            <button type="button" class="btn btn-outline-primary me-2" id="btn-login"><a href="{{ url_for('user.login') }}" class="nav-link px-2">Iniciar Sesión</a></button>
+            <button type="button" class="btn btn-primary" id="btn-register"><a href="{{ url_for('user.register') }}" class="nav-link px-2">Registrarse</a></button>
             {% endif %}
         </div>
         </header>

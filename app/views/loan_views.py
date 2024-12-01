@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, session, redirect, url_for, flash
-from datetime import datetime
+from flask import Blueprint, render_template, session, redirect, url_for, flash, request
 from utils.decorators import client_required
+from decimal import Decimal
+from datetime import datetime, timedelta
 
 from models.loans import Loan
 from models.users import User
@@ -9,108 +10,114 @@ from forms.loan_forms import LoanForm
 
 loan_views = Blueprint('loan',__name__)
 
-@loan_views.route('/préstamo/solicitar', methods=['GET', 'POST'])
+@loan_views.route('/préstamo/solicitar/', methods=['GET', 'POST'])
 @client_required
-def solicitar():
+def solicitar_prestamo():
+    # Verificar que el usuario está autenticado
     if 'user' not in session:
         return redirect(url_for('user.login'))
     
+    # Obtener datos del usuario
     user = User.__get__(session['user']['id'])
     if not user:    
         flash('Usuario no encontrado', 'danger')
         return redirect(url_for('user.login'))
 
+    # Verificar que el usuario esté aprobado para solicitar un préstamo
     if not user.is_approved:
-        flash('Tu cuenta está pendiente de aprobación. No puedes solicitar un préstamo aún.', 'warning')
+        flash('No puedes solicitar un préstamo aún.', 'warning')
         return redirect(url_for('home.index'))
     
-    # Verifica si el domicilio está registrado
+    # Verificar que el usuario tenga un domicilio registrado
     if not user.has_address():
         flash('Es necesario registrar tu domicilio antes de solicitar un préstamo.', 'warning')
         return redirect(url_for('user.address'))
+    
+    # Verificar si el cliente ya tiene un préstamo activo o pendiente
+    existing_loan = Loan.get_by_user_id(user.id_usuario)
+    if existing_loan:
+        if existing_loan.estado == 'Aprobado' or existing_loan.estado == 'Activo': 
+            flash('Solo puedes tener un préstamo activo a la vez.', 'info')
+            return redirect(url_for('home.pre_loan')) 
+        elif existing_loan.estado == 'Pendiente':
+            flash('Espera la aprobación de tu solicitud, solo puedes solicitar un préstamo.', 'info')
+            return redirect(url_for('home.pre_loan'))
     
     form = LoanForm()
 
     if form.validate_on_submit():
         id_cliente = session.get('user')['id']
-        monto = form.monto.data
-        periodo = form.periodo.data
-        modalidad_pago = form.modalidad_pago.data
-        fecha_in = datetime.utcnow()
+        monto = Decimal(form.monto.data) # Convertir el monto a decimal
+        plazo = form.plazo.data
+        interes = Decimal('0.15')  # Interés fijo del 15% con Decimal 
+        monto_total = monto * (1 + interes)  # Calcular el monto total con interés
         
-        # Crea y guarda el préstamo
-        loan = Loan(id_cliente, monto, periodo, modalidad_pago, fecha_in)
+        # Crear y guardar el préstamo
+        loan = Loan(
+            id_cliente=id_cliente,
+            monto=monto,
+            interes=interes,
+            monto_total=monto_total,
+            plazo=plazo,
+            estado='Pendiente'
+        )
         loan.save()
 
-        # Guarda los datos del préstamo en la sesión para usarlos en la función de redireccionamiento
-        session['loan_data'] = {
-            'monto': monto,
-            'periodo': periodo,
-            'modalidad_pago': modalidad_pago,
-            'fecha_in': fecha_in
-        }
-
-        return redirect(url_for('loan.loan'))
+        flash('Solicitud de préstamo enviada correctamente.', 'success')
+        return redirect(url_for('home.pre_loan'))
     
     return render_template('loan/solicitar_loan.html', form=form) 
 
-@loan_views.route('/préstamo/previo/', methods=['GET'])
+@loan_views.route('/préstamo/finalizar_solicitud/', methods=['GET', 'POST'])
+@client_required
+def finalizar_solicitud():
+    # Obtener datos del usuario
+    user = User.__get__(session['user']['id'])
+    if not user:
+        flash('Usuario no encontrado.', 'danger')
+        return redirect(url_for('user.login'))
+
+    # Verificar si el cliente tiene un préstamo aprobado
+    loan = Loan.get_by_user_id(user.id_usuario)
+    if not loan or loan.estado != 'Aprobado':
+        flash('No tienes una solicitud de préstamo para finalizar.', 'info')
+        return redirect(url_for('home.pre_loan'))
+
+    if request.method == 'POST':
+        # Registrar fechas y actualizar el préstamo
+        loan.estado = 'Activo'
+        fecha_inicio = datetime.now()
+        fecha_vencimiento = fecha_inicio + timedelta(days=loan.plazo * 30)
+        loan.fecha_inicio = fecha_inicio
+        loan.fecha_vencimiento = fecha_vencimiento
+        loan.save()
+
+        flash('Préstamo finalizado correctamente.', 'success')
+        return redirect(url_for('loan.loan'))
+    
+    return render_template('loan/finalizar_solicitud.html', loan=loan)
+
+@loan_views.route('/préstamo/mi_préstamo/')
 @client_required
 def loan():
-    # Obtenemos los datos de la sesión
-    loan_data = session.get('loan_data')
+    # Obtener datos del usuario
+    user = User.__get__(session['user']['id'])
+    if not user:
+        flash('Usuario no encontrado.', 'danger')
+        return redirect(url_for('user.login'))
 
-    if loan_data:
-        # Puedes acceder a los datos individuales
-        monto = loan_data['monto']
-        periodo = loan_data['periodo']
-        modalidad_pago = loan_data['modalidad_pago']
-        fecha_in = loan_data['fecha_in']
+    # Verificar si el cliente tiene un préstamo activo
+    loan = Loan.get_by_user_id(user.id_usuario)
+    if not loan or loan.estado != 'Activo':
+        flash('No tienes un préstamo activo para gestionar.', 'info')
+        return redirect(url_for('home.pre_loan'))
+    
+    # Calcular las fechas de pago
+    fechas_pago = loan.calcular_fechas_pago()
 
-        if modalidad_pago == 1:
-            pagos = int(periodo) * 2
-            modalidad = 'Quincenal'
-        else:
-            pagos = periodo
-            modalidad = 'Mensual'
+    return render_template('loan/loan.html', loan=loan, fechas_pago=fechas_pago)
 
-        # Calcular el monto total a pagar 
-        tasa_interes = 0.1  # Tasa de interés
-        monto_total = monto * tasa_interes + monto
-
-        # Aquí puedes hacer lo que necesites con los datos, por ejemplo, mostrarlos en una plantilla
-        return render_template('loan/calcular_loan.html', monto=monto, periodo=periodo, fecha_in=fecha_in, pagos=pagos, modalidad=modalidad, monto_total=monto_total)
-    else:
-        # Manejo en caso de que los datos no estén en la sesión
-        return "No se encontraron datos de préstamo previo."
-
-@loan_views.route('/préstamo/estado/')
-@client_required
-def estado():
-    # Obtenemos los datos de la sesión
-    loan_data = session.get('loan_data')
-
-    if loan_data:
-        # Puedes acceder a los datos individuales
-        monto = loan_data['monto']
-        periodo = loan_data['periodo']
-        modalidad_pago = loan_data['modalidad_pago']
-        fecha_in = loan_data['fecha_in']
-
-        if modalidad_pago == 1:
-            pagos = periodo * 2
-            modalidad = 'Quincenal'
-        else:
-            pagos = periodo
-            modalidad = 'Mensual'
-
-        # Calcular el monto total a pagar 
-        tasa_interes = 0.1  # Tasa de interés
-        monto_total = monto * tasa_interes + monto
-
-    return render_template('loan/estado_loan.html', monto=monto, periodo=periodo, modalidad=modalidad, monto_total=monto_total)
-
-@loan_views.route('/préstamo/pagos/')
+@loan_views.route('/préstamo/mi_préstamo/pagar/')
 @client_required
 def pagos():
-    return render_template('loan/pagos_loan.html')
+    return redirect(url_for('loan.loan'))

@@ -9,10 +9,19 @@
 {% block content %}  
 
 <div>
-    {% if is_approved == 1 %}
+    {% if is_approved == 1 and existing_loan.estado != 'Aprobado' and existing_loan.estado != 'Activo' %}
     <button class="purple-button" style="margin-left: 23rem;">
-        <a class="primerlink" href="{{ url_for('loan.solicitar') }}">Solicita tu préstamo</a>
+        <a class="primerlink" href="{{ url_for('loan.solicitar_prestamo') }}">Solicita tu préstamo</a>
     </button>
+    {% elif is_approved == 1 and existing_loan.estado == 'Aprobado' %}
+    <button class="purple-button" style="margin-left: 23rem;">
+        <a class="primerlink" href="{{ url_for('loan.finalizar_solicitud') }}">Finalizar solicitud de préstamo</a>
+    </button>
+    {% elif is_approved == 1 and existing_loan.estado == 'Activo' %}
+    <button class="purple-button" style="margin-left: 23rem;">
+        <a class="primerlink" href="{{ url_for('loan.loan') }}">Mi Préstamo</a>
+    </button>
+    
     {% endif %}
 </div>
 

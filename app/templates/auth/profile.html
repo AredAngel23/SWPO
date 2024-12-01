@@ -159,19 +159,34 @@
         <div class="form-field">
             <label for="{{ password_form.old_password.id_for_label }}">Contraseña actual:</label>
             {{ password_form.old_password(class="input-field") }}
+            {% if password_form.old_password.errors %}
+            {% for error in password_form.old_password.errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+            {% endif %}
         </div>
 
         <div class="form-field">
             <label for="{{ password_form.new_password.id_for_label }}">Nueva contraseña:</label>
             {{ password_form.new_password(class="input-field") }}
+            {% if password_form.new_password.errors %}
+            {% for error in password_form.new_password.errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+            {% endif %}
         </div>
 
         <div class="form-field">
             <label for="{{ password_form.confirm_password.id_for_label }}">Confirmar nueva contraseña:</label>
             {{ password_form.confirm_password(class="input-field") }}
+            {% if password_form.confirm_password.errors %}
+            {% for error in password_form.confirm_password.errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+            {% endif %}
         </div>
 
-        <button type="submit" class="submit-button">Cambiar contraseña</button>
+        <button type="submit" class="submit-button" id="btn-cambiar-contraseña">Cambiar contraseña</button>
     </form>
 
 </div>

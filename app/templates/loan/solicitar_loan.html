@@ -9,13 +9,14 @@
 {% block content %}  
 
 <div class="position-relative overflow-hidden p-3 text-center bg-body-tertiary">
-    <h1 class="fw-normal">Préstamo Estimado</h1> <br>
+    <h1 class="fw-normal">Solicitar Préstamo</h1> <br>
 
     <form action="" method="post">
         {{ form.csrf_token }}
 
         <div>
-            {{ form.monto.label }} {{ form.monto() }}
+            <label for="{{ form.monto.id_for_label }}">Monto requerido:</label>
+            {{ form.monto(class="input-field", placeholder="Monto", required=True) }}
             {% if form.monto.errors %}
                 {% for error in form.monto.errors %}
                 <p>{{ error }}</p>
@@ -24,22 +25,10 @@
         </div>
         <br>
         <div>
-            {{ form.periodo.label }} {{ form.periodo() }}
-            {% for error in form.periodo.errors %}
-                <span style="color: red;">{{ error}}</span>
-            {% endfor %}
-        </div>
-        <div>
-            {{ form.modalidad_pago.label }} {{ form.modalidad_pago() }}
-            {% for error in form.modalidad_pago.errors %}
-                <span style="color: red;">{{ error}}</span>
-            {% endfor %}
-        </div>
-        <br>
-        <div>
-            {{ form.accept_tc.label }} {{ form.accept_tc() }}
-            {% if form.accept_tc.errors %}
-                {% for error in form.accept_tc.errors %}
+            <label for="{{ form.plazo.id_for_label }}">Plazo (en meses):</label>
+            {{ form.plazo(class="input-field", placeholder="Plazo", required=True) }}
+            {% if form.plazo.errors %}
+                {% for error in form.plazo.errors %}
                 <p>{{ error }}</p>
                 {% endfor %}
             {% endif %}

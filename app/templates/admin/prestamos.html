@@ -1,0 +1,74 @@
+{% extends 'base_admin2.html' %}
+    
+{% block title %}Administración-Préstamos Ortega{% endblock %}
+
+{% block customCSS %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/flash_admin.css') }}">
+{% endblock %}
+
+{% block content %}
+      <main>
+        <!-- Mensajes flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+        <div class="header">
+            <h1>Administración - Préstamos Ortega</h1>
+            <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="logo" class="logo">
+        </div>
+        <hr>
+        <div>
+            <h2>Préstamos</h2>
+            {% if loans %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Correo</th>
+                            <th>Monto</th>
+                            <th>Interès</th>
+                            <th>Monto Total</th>
+                            <th>Plazo</th>
+                            <th>Estado</th>
+                            <th>Fecha de Inicio</th>
+                            <th>Fecha de vencimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for loan in loans %}
+                        <tr>
+                            <td>{{ loan.id_prestamo }}</td>
+                            <td>{{ loan.nombre }} {{ loan.ape_pat }} {{ loan.ape_mat }}</td>
+                            <td>{{ loan.email }}</td>
+                            <td>${{ loan.monto }}</td>
+                            <td>%15</td>
+                            <td>${{ loan.monto_total }}</td>
+                            <td>{{ loan.plazo }} meses</td>
+                            <td>{{ loan.estado }}</td>
+                            <td>{{ loan.fecha_inicio }}</td>
+                            <td>{{ loan.fecha_vencimiento }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No hay préstamos activos.</p>
+            {% endif %}
+            <button type="button" class="desplazamiento">
+                <a href="{{ url_for('admin.admin') }}">
+                    Regresar
+                </a>
+            </button>
+          </div>
+      </main>
+{% endblock %}

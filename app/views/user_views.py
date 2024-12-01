@@ -165,7 +165,7 @@ def address():
         address.save()
         flash('Registro de domicilio exitoso', 'success')
 
-        return redirect(url_for('loan.solicitar'))
+        return redirect(url_for('loan.solicitar_prestamo'))
 
     # Si hay errores en el formulario, mostrar mensajes sin redirigir
     if form.errors:

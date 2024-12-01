@@ -16,9 +16,9 @@
     <div class="sidebar">
         <div>
             <ul>
-                <li><a href="{{ url_for('admin.admin') }}">Dashboard</a></li>
-                <li><a href="#">Préstamos</a></li>
-                <li><a href="{{ url_for('admin.mostrar_clientes') }}">Clientes</a></li>
+                <li><a href="{{ url_for('admin.admin') }}" id="link-dashboard">Dashboard</a></li>
+                <li><a href="{{ url_for('admin.mostrar_prestamos') }}" id="link-loans">Préstamos</a></li>
+                <li><a href="{{ url_for('admin.mostrar_clientes') }}" id="link-clients">Clientes</a></li>
                 <li><a href="#">Reportes</a></li>
             </ul>
             <ul>

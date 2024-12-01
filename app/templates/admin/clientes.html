@@ -46,7 +46,7 @@
                 </thead>
                 <tbody>
                     {% for user in users %}
-                    <tr>
+                    <tr class="client-row">
                         <td>{{ user.nombre }} {{ user.ape_pat }} {{ user.ape_mat }}</td>
                         <td>{{ user.genero }}</td>
                         <td>{{ user.fecha_nacimiento }}</td>
@@ -56,19 +56,16 @@
                         <td>{{ user.curp }}</td>
                         <td>{{ user.tel_cel }}</td>
                         <td>{{ user.tel_casa }}</td>
-                        <td>{{ user.email }}</td>
+                        <td class="td-email">{{ user.email }}</td>
                         <td>
                             <button class="desplazamiento">
                                 <a href="{{ url_for('admin.mostrar_domicilio_clientes', id_usuario=user.id_usuario) }}">
                                     Domicilio
                                 </a>
                             </button>
-                            <button class="reject">
-                                <a href="{{ url_for('admin.delete', id=user.id_usuario) }}"
-                                   onclick="return confirm('¿Estás seguro de eliminar al cliente?');">
-                                    Eliminar
-                                </a>
-                            </button>
+                            <form action="{{ url_for('admin.delete', id=user.id_usuario) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar al cliente?');">
+                                <button type="submit" class="reject">Eliminar</button>
+                            </form>                            
                         </td>
                     </tr>
                     {% endfor %}

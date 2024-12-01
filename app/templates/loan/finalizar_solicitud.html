@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+    
+{% block title %}Finalizar Solicitud de Préstam{% endblock %}
+
+{% block content %}  
+
+    <div class="position-relative overflow-hidden p-3 p-md-5 text-center bg-body-tertiary">
+        <h1 class="fw-normal">Finalizar Solicitud de Préstamo</h1>
+        <p class="lead">Confirma los detalles de tu préstamo y haz clic en "Finalizar" para completar el proceso.</p>
+        <p class="lead">Monto</p>
+        <h2>${{ loan.monto }}</h2>
+        <div>
+            <p class="lead">Plazo del Préstamo: <strong>{{ loan.plazo }} Meses</strong></p>
+            <p class="lead">Plan de Pago: <strong>Mensual</strong></p>
+            <p class="lead">Número de Pagos: <strong>{{ loan.plazo }}</strong></p>
+            <p class="lead">Interés: <strong>15%</strong></p>
+            <p class="lead">Monto Total a Pagar<h2>MXN${{ loan.monto_total }}</h2></p>
+        </div>
+        <br>
+        <!-- Botón para finalizar la solicitud -->
+        <form action="{{ url_for('loan.finalizar_solicitud') }}" method="POST">
+            <button type="submit" class="btn btn-primary" onclick="return confirm('¿Estás seguro de finalizar tu solicitud?')">Finalizar</button>
+        </form>
+
+        <!-- Enlace para regresar -->
+        <a href="{{ url_for('home.pre_loan') }}" class="btn btn-secondary">Cancelar</a>
+
+    </div>
+
+
+{% endblock %}  

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+    
+{% block title %}Mi Préstamo{% endblock %}
+
+{% block content %}  
+
+    <h1>Mi Préstamo</h1> 
+    <div>
+        <p><strong>Monto del Préstamo:</strong> ${{ loan.monto }}</p>
+        <p><strong>Interés:</strong>15%</p>
+        <p><strong>Monto Total:</strong> ${{ loan.monto_total }}</p>
+        <p><strong>Plazo:</strong> {{ loan.plazo }} meses</p>
+        <p><strong>Fecha de Inicio:</strong> {{ loan.fecha_inicio.strftime('%d/%m/%Y') }}</p>
+        <p><strong>Fecha de Vencimiento:</strong> {{ loan.fecha_vencimiento.strftime('%d/%m/%Y') }}</p>
+    </div>
+
+    <h2>Fechas de Pago</h2>
+    {% if fechas_pago %}
+        <ul>
+            {% for fecha in fechas_pago %}
+                <li>{{ fecha.strftime('%d/%m/%Y') }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No se han calculado fechas de pago.</p>
+    {% endif %}
+
+{% endblock %} 
