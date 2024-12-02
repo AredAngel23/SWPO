@@ -35,7 +35,6 @@ def test_aprobar_usuario(driver):
             alert = driver.switch_to.alert
             alert.accept()
             time.sleep(2)
-
             break # Detener el bucle una vez que se haya encontrado y eliminado el cliente
     
     # Validar si el usuario fue encontrado
