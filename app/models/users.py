@@ -215,6 +215,10 @@ class User:
             val = (self.id_usuario,)
             cursor.execute(sql, val)
             result = cursor.fetchone()
+            if not result:
+                print("No result found for id_cliente:", self.id_usuario)
+                return False
+            print("Result:", result)
             return result['count'] > 0
     
     # Importación diferida dentro del método o función donde se use Address

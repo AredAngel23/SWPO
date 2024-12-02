@@ -29,7 +29,7 @@ def solicitar_prestamo():
         return redirect(url_for('home.index'))
     
     # Verificar que el usuario tenga un domicilio registrado
-    if not user.has_address():
+    if user.has_address() == False:
         flash('Es necesario registrar tu domicilio antes de solicitar un préstamo.', 'warning')
         return redirect(url_for('user.address'))
     

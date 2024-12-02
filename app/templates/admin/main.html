@@ -47,7 +47,7 @@
                   </thead>
                   <tbody>
                       {% for usuario in users %}
-                      <tr>
+                      <tr class="user-row">
                           <td>{{ usuario.nombre }} {{ usuario.ape_pat }} {{ usuario.ape_mat }}</td>
                           <td>{{ usuario.genero }}</td>
                           <td>{{ usuario.fecha_nacimiento }}</td>
@@ -57,7 +57,7 @@
                           <td>{{ usuario.curp }}</td>
                           <td>{{ usuario.tel_cel }}</td>
                           <td>{{ usuario.tel_casa }}</td>
-                          <td>{{ usuario.email }}</td>
+                          <td class="td_emailU">{{ usuario.email }}</td>
                           <td>
                             <button class="approve">
                               <a href="{{ url_for('admin.aprobar_usuario', id_usuario=usuario.id_usuario) }}" 
@@ -100,19 +100,19 @@
                   </thead>
                   <tbody>
                       {% for loanP in loansP %}
-                      <tr>
+                      <tr class="loan-row">
                           <td>{{ loanP.id_prestamo }}</td>
                           <td>{{ loanP.nombre }} {{ loanP.ape_pat }} {{ loanP.ape_mat }}</td>
-                          <td>{{ loanP.email }}</td>
+                          <td class="td-email">{{ loanP.email }}</td>
                           <td>${{ loanP.monto }}</td>
-                          <td>%{{ loanP.interes }}</td>
+                          <td>15%</td>
                           <td>${{ loanP.monto_total }}</td>
                           <td>{{ loanP.plazo }} meses</td>
                           <td>{{ loanP.estado }}</td>
                           <td>
                             <form action="{{ url_for('admin.aprobar_prestamo', id_prestamo=loanP.id_prestamo) }}" method="POST" 
                                   onsubmit="return confirm('¿Estás seguro de que deseas aprobar la solicitud de préstamo?');">
-                                <button class="approve" type="submit">Aprobar</button>
+                                <button class="approve" type="submit" id="approve_loan">Aprobar</button>
                             </form>
                             <form action="{{ url_for('admin.rechazar_prestamo', id_prestamo=loanP.id_prestamo) }}" method="POST" 
                                   onsubmit="return confirm('¿Estás seguro de que deseas rechazar la solicitud de préstamo?');">

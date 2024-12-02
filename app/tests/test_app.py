@@ -1,21 +1,23 @@
 from selenium import webdriver
 import time
 
-from app.tests.test_login import test_login, test_admin_login
-from app.tests.test_users import test_eliminar_cliente, test_cambiar_contraseña, test_registrar_usuario
+from .test_login import test_login, test_admin_login
+from .test_users import test_eliminar_cliente, test_cambiar_contraseña, test_registrar_usuario
+from .test_admin import test_aprobar_usuario, test_aprobar_prestamo
+from .test_loan import test_solicitar_prestamo
 
 def initialize_driver():
-    driver = webdriver.Chrome() 
+    driver = webdriver.Firefox() 
     return driver
 
 def main():
     driver = initialize_driver()
     driver.maximize_window()
-    driver.get('http://127.0.0.1:5000/')
+    driver.get('http://127.0.0.1:8000/')
 
     try:
         # Pruebas
-        resultado = test_eliminar_cliente(driver)
+        resultado = test_aprobar_prestamo(driver)
         if resultado:
             print("Prueba Exitosa")
         else:
